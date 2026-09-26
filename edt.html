@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorraine's</title><!-- ==================== Favicon ==================== -->
+    <!-- 经典 Apple Logo 作为 favicon（SVG 内联方式，最清晰） -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 24'>
+  <path fill='%23000000' d='M16.67 12.68c-.07-1.77 1.45-2.63 1.52-2.66-.83-1.2-2.1-1.37-2.56-1.39-1.08-.11-2.12.64-2.67.64-.55 0-1.4-.62-2.3-.6-1.18.01-2.27.68-2.88 1.74-1.23 2.12-.32 5.26.88 6.98.58.84 1.28 1.78 2.2 1.75.88-.04 1.21-.57 2.28-.57 1.06 0 1.36.57 2.28.55.94-.02 1.54-.86 2.12-1.7.66-.97.94-1.91.96-1.96-.02-.01-1.84-.72-1.86-2.85l.03-.13ZM14.3 5.04c.48-.6.82-1.41.73-2.23-.7.03-1.55.47-2.06 1.06-.45.52-.84 1.34-.74 2.14.78.06 1.58-.4 2.07-.97Z'/>
+</svg>" />
+    <!-- 备用：.ico 格式（兼容老浏览器） -->
+    <link rel="alternate icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+    <style>
+      :root {
+        --nav-height: 44px;
+        --nav-bg: rgba(22, 22, 23, 0.8);
+        --nav-text: #f5f5f7;
+        --nav-text-dim: #a1a1a6;
+        --nav-hover: #ffffff;
+        --dropdown-bg: rgba(22, 22, 23, 0.95);
+        --accent: #0071e3;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+          "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #000;
+        color: #f5f5f7;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 200vh;
+        /* 让页面可滚动，演示粘性导航效果 */
+        ;
+      }
+
+      /* ==================== 全局导航栏 ==================== */
+      .global-nav {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        width: 100%;
+        height: var(--nav-height);
+        background: var(--nav-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        transition: background 0.3s ease;
+      }
+
+      .global-nav.scrolled {
+        background: rgba(22, 22, 23, 0.92);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-container {
+        max-width: 1024px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* ==================== Logo ==================== */
+      .nav-logo {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 100%;
+        color: var(--nav-text);
+        transition: color 0.2s ease;
+        text-decoration: none;
+      }
+
+      .nav-logo:hover {
+        color: var(--nav-hover);
+      }
+
+      .nav-logo svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* ==================== 主导航菜单 ==================== */
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        list-style: none;
+        gap: 0;
+      }
+
+      .nav-item {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 18px;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        color: var(--nav-text-dim);
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        background: none;
+        border: none;
+        font-family: inherit;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        color: var(--nav-hover);
+        outline: none;
+      }
+
+      /* ==================== 下拉菜单 ==================== */
+      .dropdown {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(8px);
+        background: var(--dropdown-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-radius: 18px;
+        padding: 20px 24px;
+        min-width: 280px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease,
+          transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 20px 60px rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+      }
+
+      /* 下拉箭头指向 */
+      .dropdown::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 12px;
+        height: 12px;
+        background: var(--dropdown-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-radius: 2px;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-item:hover .dropdown,
+      .nav-item:focus-within .dropdown {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(4px);
+      }
+
+      .dropdown-title {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #86868b;
+        margin-bottom: 10px;
+      }
+
+      .dropdown-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .dropdown-list li {
+        margin: 0;
+      }
+
+      .dropdown-list a {
+        display: block;
+        padding: 6px 0;
+        font-size: 14px;
+        font-weight: 500;
+        color: #f5f5f7;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .dropdown-list a:hover {
+        color: #fff;
+      }
+
+      .dropdown-list .sub-text {
+        font-size: 12px;
+        font-weight: 400;
+        color: #86868b;
+        margin-top: 1px;
+      }
+
+      .dropdown-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 10px 0;
+      }
+
+      .dropdown-featured {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .dropdown-featured a {
+        font-size: 13px;
+        font-weight: 400;
+        color: #a1a1a6;
+        padding: 4px 0;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .dropdown-featured a:hover {
+        color: #fff;
+      }
+
+      /* ==================== 右侧图标 ==================== */
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      .nav-icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 100%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--nav-text-dim);
+        transition: color 0.2s ease;
+        padding: 0;
+      }
+
+      .nav-icon-btn:hover {
+        color: var(--nav-hover);
+      }
+
+      .nav-icon-btn svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        pointer-events: none;
+      }
+
+      /* ==================== 移动端汉堡按钮 ==================== */
+      .hamburger {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 100%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: var(--nav-text-dim);
+        transition: color 0.2s ease;
+      }
+
+      .hamburger:hover {
+        color: var(--nav-hover);
+      }
+
+      .hamburger-line {
+        position: relative;
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger-line::before,
+      .hamburger-line::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger-line::before {
+        top: -6px;
+      }
+
+      .hamburger-line::after {
+        top: 6px;
+      }
+
+      /* 激活状态 */
+      .hamburger.active .hamburger-line {
+        background: transparent;
+      }
+
+      .hamburger.active .hamburger-line::before {
+        top: 0;
+        transform: rotate(45deg);
+      }
+
+      .hamburger.active .hamburger-line::after {
+        top: 0;
+        transform: rotate(-45deg);
+      }
+
+      /* ==================== 移动端侧滑菜单 ==================== */
+      .mobile-menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: var(--nav-height);
+        right: 0;
+        width: 320px;
+        max-width: 85vw;
+        height: calc(100vh - var(--nav-height));
+        background: rgba(22, 22, 23, 0.98);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        z-index: 9999;
+        overflow-y: auto;
+        padding: 24px 28px;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-section {
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 20px;
+      }
+
+      .mobile-menu-section:last-child {
+        border-bottom: none;
+      }
+
+      .mobile-menu-category {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #86868b;
+        margin-bottom: 8px;
+      }
+
+      .mobile-menu a {
+        display: block;
+        padding: 8px 0;
+        font-size: 17px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: #f5f5f7;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .mobile-menu a:hover {
+        color: #fff;
+      }
+
+      .mobile-menu a.sub-link {
+        font-size: 14px;
+        color: #a1a1a6;
+        padding: 5px 0;
+      }
+
+      /* ==================== 搜索栏（隐藏的） ==================== */
+      .search-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        transform: translateY(8px);
+        background: var(--dropdown-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-radius: 18px;
+        padding: 12px 16px;
+        min-width: 260px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease,
+          transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 20px 60px rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+      }
+
+      .search-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(4px);
+      }
+
+      .search-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+
+      .search-input-wrap svg {
+        width: 14px;
+        height: 14px;
+        fill: #86868b;
+        flex-shrink: 0;
+      }
+
+      .search-input-wrap input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .search-input-wrap input::placeholder {
+        color: #86868b;
+      }
+
+      .search-quick-links {
+        margin-top: 10px;
+      }
+
+      .search-quick-links span {
+        font-size: 11px;
+        color: #86868b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .search-quick-links a {
+        display: block;
+        font-size: 13px;
+        color: #a1a1a6;
+        text-decoration: none;
+        padding: 4px 0;
+        transition: color 0.15s;
+      }
+
+      .search-quick-links a:hover {
+        color: #fff;
+      }
+
+      /* ==================== 实时时钟样式 ==================== */
+      .nav-clock {
+        display: flex;
+        align-items: baseline;
+        padding: 0 12px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--nav-text-dim);
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        user-select: none;
+        /* 关键：等宽数字，防止毫秒刷新时布局抖动 */
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum";
+      }
+
+      .clock-time {
+        color: var(--nav-text);
+      }
+
+      .clock-ms {
+        font-size: 10px;
+        opacity: 0.6;
+        margin-left: 1px;
+      }
+
+      /* 移动端适配：小屏隐藏毫秒或整个时钟 */
+      @media (max-width: 768px) {
+        .clock-ms {
+          display: none;
+        }
+
+        .nav-clock {
+          padding: 0 8px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-clock {
+          display: none;
+        }
+      }
+
+      /* ==================== 演示内容区域 ==================== */
+      .hero-section {
+        padding: 120px 20px 80px;
+        text-align: center;
+        background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
+      }
+
+      .hero-section h1 {
+        font-size: clamp(40px, 8vw, 80px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        color: #f5f5f7;
+        margin-bottom: 16px;
+      }
+
+      .hero-section .subhead {
+        font-size: clamp(17px, 3vw, 24px);
+        font-weight: 400;
+        color: #86868b;
+        letter-spacing: -0.01em;
+      }
+
+      .content-section {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 0 24px;
+      }
+
+      .content-section h2 {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+        color: #f5f5f7;
+      }
+
+      .content-section p {
+        font-size: 17px;
+        line-height: 1.6;
+        color: #a1a1a6;
+        margin-bottom: 24px;
+      }
+
+      /* ==================== 响应式 ==================== */
+      @media (max-width: 833px) {
+        .nav-menu {
+          display: none;
+        }
+
+        .hamburger {
+          display: flex;
+        }
+
+        .nav-container {
+          padding: 0 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-icon-btn {
+          width: 30px;
+        }
+
+        .nav-icon-btn svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .nav-logo svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .mobile-menu {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+
+      /* ==================== Footer ==================== */
+      .global-footer {
+        background: #161617;
+        padding: 40px 0 30px;
+        color: #86868b;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .footer-container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 22px;
+      }
+
+      /* 顶部声明 */
+      .footer-disclaimer {
+        padding-bottom: 18px;
+      }
+
+      .footer-disclaimer p {
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: #6e6e73;
+        line-height: 1.5;
+      }
+
+      .footer-disclaimer p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* 分割线 */
+      .footer-divider {
+        height: 1px;
+        background: #2d2d2f;
+        margin: 12px 0;
+      }
+
+      /* 多列布局 */
+      .footer-columns {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+        padding: 20px 0 30px;
+      }
+
+      .footer-col-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #f5f5f7;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+
+      .footer-col ul {
+        list-style: none;
+      }
+
+      .footer-col ul li {
+        margin-bottom: 6px;
+      }
+
+      .footer-col ul li a {
+        color: #86868b;
+        text-decoration: none;
+        font-size: 12px;
+        transition: color 0.15s ease;
+      }
+
+      .footer-col ul li a:hover {
+        color: #f5f5f7;
+        text-decoration: underline;
+      }
+
+      /* 底部最下栏 */
+      .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding-top: 8px;
+      }
+
+      .footer-copyright {
+        margin-right: auto;
+        color: #6e6e73;
+      }
+
+      .footer-legal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer-legal a {
+        color: #6e6e73;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .footer-legal a:hover {
+        color: #f5f5f7;
+        text-decoration: underline;
+      }
+
+      .footer-sep {
+        color: #3a3a3c;
+      }
+
+      .footer-locale {
+        margin-left: 16px;
+      }
+
+      .footer-locale a {
+        color: #6e6e73;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .footer-locale a:hover {
+        color: #f5f5f7;
+        text-decoration: underline;
+      }
+
+      /* ==================== Footer 响应式 ==================== */
+      @media (max-width: 833px) {
+        .footer-columns {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer-columns {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 24px 12px;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .footer-copyright {
+          margin-right: 0;
+        }
+
+        .footer-locale {
+          margin-left: 0;
+        }
+      }
+
+      /* Apple Dark Card - 隔离样式，不干扰现有页面 */
+      .apd-card {
+        width: 320px;
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(44, 44, 46, 0.3);
+        /* 深灰半透底 */
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.2),
+          0 12px 28px rgba(0, 0, 0, 0.25);
+        transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+          box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        cursor: pointer;
+        outline: none;
+        contain: layout style;
+      }
+
+      .apd-card:hover,
+      .apd-card:focus-visible {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.3),
+          0 20px 40px rgba(0, 0, 0, 0.35);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      .apd-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #0A84FF, #5E5CE6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        margin-bottom: 18px;
+      }
+
+      .apd-title {
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #f5f5f7;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.01em;
+      }
+
+      .apd-desc {
+        font-size: 14px;
+        line-height: 1.5;
+        font-weight: 400;
+        color: #a1a1a6;
+        margin: 0;
+      }
+
+      /* 无障碍焦点环 */
+      .apd-card:focus-visible {
+        outline: 2px solid #0A84FF;
+        outline-offset: 3px;
+      }
+
+      @supports not (backdrop-filter: blur(24px)) {
+        .apd-card {
+          background: #2c2c2e;
+        }
+      }
+
+      /* Apple Dark Grid - 与 .apd-card 配套使用 */
+      .apd-grid {
+        display: grid;
+        /* 自适应列宽：最小300px，自动填充剩余空间 */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        /* Apple 标准间距节奏 */
+        width: 100%;
+        max-width: 1200px;
+        /* 防止超宽屏卡片过宽失真 */
+        margin: 0 auto;
+        /* 居中约束 */
+        align-items: start;
+      }
+
+      /* 移动端优化：小屏强制单列 + 缩小间距 */
+      @media (max-width: 640px) {
+        .apd-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .apd-card {
+          width: 100% !important;
+          /* 覆盖固定宽度，适配流式布局 */
+        }
+      }
+
+      /* 平板/中等屏幕：确保至少两列 */
+      @media (min-width: 641px) and (max-width: 960px) {
+        .apd-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* 卡片基础过渡（同时服务于入场和悬停） */
+      .apd-card {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* 入场完成态 */
+      .apd-grid.apd-loaded .apd-card {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* 交错延迟（仅入场时生效） */
+      .apd-grid.apd-loaded .apd-card:nth-child(1) {
+        transition-delay: 0ms;
+      }
+
+      .apd-grid.apd-loaded .apd-card:nth-child(2) {
+        transition-delay: 80ms;
+      }
+
+      .apd-grid.apd-loaded .apd-card:nth-child(3) {
+        transition-delay: 160ms;
+      }
+
+      .apd-grid.apd-loaded .apd-card:nth-child(4) {
+        transition-delay: 240ms;
+      }
+
+      .apd-grid.apd-loaded .apd-card:nth-child(5) {
+        transition-delay: 320ms;
+      }
+
+      .apd-grid.apd-loaded .apd-card:nth-child(6) {
+        transition-delay: 400ms;
+      }
+
+      .apd-grid.apd-loaded .apd-card:nth-child(n+7) {
+        transition-delay: 480ms;
+      }
+
+      /* ⚠️ 关键：悬停/焦点时清除延迟，避免浮起也等80ms */
+      .apd-card:hover,
+      .apd-card:focus-visible {
+        transform: translateY(-4px) scale(1.01) !important;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 20px 40px rgba(0, 0, 0, 0.35);
+        border-color: rgba(255, 255, 255, 0.12);
+        transition-delay: 0s !important;
+      }
+
+      /* 无障碍 */
+      @media (prefers-reduced-motion: reduce) {
+        .apd-card {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+      }
+
+      /* ==================== Copy Button (Apple Style) ==================== */
+      .copy-btn,
+      .open-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 14px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 980px;
+        /* Apple 胶囊圆角 */
+        color: var(--nav-text);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        white-space: nowrap;
+        user-select: none;
+        text-decoration: none;
+      }
+
+      .copy-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+
+      .copy-btn:active {
+        transform: scale(0.96);
+      }
+
+      .copy-btn svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+
+      /* 复制成功状态 */
+      .copy-btn.copied {
+        background: rgba(52, 199, 89, 0.15);
+        border-color: rgba(52, 199, 89, 0.3);
+        color: #34c759;
+      }
+
+      /* 如果用在 nav-actions 里，调整为纯图标按钮 */
+      .nav-actions .copy-btn {
+        width: 36px;
+        padding: 0;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+      }
+
+      .nav-actions .copy-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      /* Tooltip 提示（可选） */
+      .copy-btn::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%) translateY(4px);
+        padding: 5px 10px;
+        background: rgba(60, 60, 67, 0.95);
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #fff;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        z-index: 10001;
+      }
+
+      .copy-btn.show-tooltip::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ==================== 全局导航栏 ==================== -->
+    <nav class="global-nav" id="globalNav" role="navigation" aria-label="主导航">
+      <div class="nav-container">
+        <!-- Apple Logo -->
+        <a href="blog.html" class="nav-logo" aria-label="Apple 首页">
+          <svg viewBox="0 0 20 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.67 12.68c-.07-1.77 1.45-2.63 1.52-2.66-.83-1.2-2.1-1.37-2.56-1.39-1.08-.11-2.12.64-2.67.64-.55 0-1.4-.62-2.3-.6-1.18.01-2.27.68-2.88 1.74-1.23 2.12-.32 5.26.88 6.98.58.84 1.28 1.78 2.2 1.75.88-.04 1.21-.57 2.28-.57 1.06 0 1.36.57 2.28.55.94-.02 1.54-.86 2.12-1.7.66-.97.94-1.91.96-1.96-.02-.01-1.84-.72-1.86-2.85l.03-.13ZM14.3 5.04c.48-.6.82-1.41.73-2.23-.7.03-1.55.47-2.06 1.06-.45.52-.84 1.34-.74 2.14.78.06 1.58-.4 2.07-.97Z" />
+          </svg>
+        </a>
+        <!-- 主导航菜单（桌面端） -->
+        <ul class="nav-menu" id="navMenu" role="menubar">
+          <!-- sgzhd -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Sgzhd
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore Sgzhd</div>
+              <ul class="dropdown-list">
+                <li><a href="https://wanyiwan.top/game/sgzhd">时光</a></li>
+                <li><a href="#">人才</a></li>
+                <li><a href="#">艺人</a></li>
+                <li><a href="#">澡堂</a></li>
+                <li><a href="#">载具</a></li>
+                <li><a href="#">鱼摊</a></li>
+                <li><a href="#">录像厅</a></li>
+                <li><a href="#">歌舞厅</a></li>
+              </ul>
+            </div>
+          </li>
+          <!-- 常用网站 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Website
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore URL</div>
+              <ul class="dropdown-list">
+                <li><a href="oldindex.html">Home <span class="sub-text">1</span></a></li>
+                <li><a href="#">Website <span class="sub-text">2</span></a></li>
+                <li><a href="#">Website</a></li>
+                <li><a href="#">Website</a></li>
+                <li><a href="#">Website</a></li>
+                <li><a href="#">Website</a></li>
+                <li><a href="#">Website</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="#">123</a>
+                <a href="#">123</a>
+              </div>
+            </div>
+          </li>
+          <!-- 节点信息 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Proxy
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore Proxy</div>
+              <ul class="dropdown-list">
+                <li><a href="#">nodeinfo</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="#">4</a>
+                <a href="#">5</a>
+              </div>
+            </div>
+          </li>
+          <!-- iPhone -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Tvbox
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore TVBOX</div>
+              <ul class="dropdown-list">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="#">6 →</a>
+                <a href="#">7 →</a>
+              </div>
+            </div>
+          </li>
+          <!-- 个人域名 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Domain
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore Domain</div>
+              <ul class="dropdown-list">
+                <li><a href="#">l02.ccwu.cc</a></li>
+                <li><a href="#">i0.ccwu.cc</a></li>
+                <li><a href="#">o02.ccwu.cc</a></li>
+                <li><a href="#">r02.ccwu.cc</a></li>
+                <li><a href="#">r0.ccwu.cc</a></li>
+                <li><a href="#">e0.ccwu.cc</a></li>
+                <li><a href="#">n0.ccwu.cc</a></li>
+                <li><a href="#">rll.ccwu.cc</a></li>
+                <li><a href="#">0h.ccwu.cc</a></li>
+                <li><a href="#">0r.ccwu.cc</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">lorraine.ccwu.cc</a></li>
+                <li><a href="#">leehui.ccwu.cc</a></li>
+                <li><a href="#">rolling.bbroot.com</a></li>
+                <li><a href="#">leehui.bbroot.com</a></li>
+                <li><a href="#">lorraine.bbroot.com</a></li>
+                <li><a href="#">lorraine.de5.net</a></li>
+                <li><a href="#">lorrainel.cc.cd</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="#">1 →</a>
+                <a href="#">2 →</a>
+              </div>
+            </div>
+          </li>
+          <!-- GAME -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              CSS
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#">毛玻璃效果</a></li>
+                <li><a href="#">2</a></li>
+              </ul>
+            </div>
+          </li>
+          <!-- 影视 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Media
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+              </ul>
+            </div>
+          </li>
+          <!-- 编程 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Program
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#">Python在线运行</a></li>
+                <li><a href="#">Html在线编辑</a></li>
+                <li><a href="#">Json格式化</a></li>
+                <li><a href="#">XML格式化</a></li>
+                <li><a href="https://kangax.github.io/html-minifier/">HTML Minifier</a></li>
+                <li><a href="https://cssminifier.com">CSS Minifier</a></li>
+                <li><a href="https://javascript-minifier.com">JS Minifier</a></li>
+                <li><a href="https://toptal.com/developers/html-minifier">Toptal</a></li>
+              </ul>
+            </div>
+          </li>
+          <!-- 站点 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Station
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#">IP查询</a></li>
+                <li><a href="#">域名whois查询</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+              </ul>
+            </div>
+          </li>
+          <!-- 昵称 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Me
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#">lorraine</a></li>
+                <li><a href="#">Rolin</a></li>
+                <li><a href="#">Rolyn</a></li>
+                <li><a href="#">Rholyn</a></li>
+                <li><a href="#">···</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <!-- 右侧操作按钮 -->
+        <div class="nav-actions">
+          <!-- 实时北京时间显示 -->
+          <div class="nav-clock" id="bjClock" aria-label="当前北京时间">
+            <span class="clock-time">--:--:--</span>
+            <span class="clock-ms">.---</span>
+          </div>
+          <!-- 搜索 -->
+          <div style="position: relative;">
+            <button class="nav-icon-btn" id="searchBtn" aria-label="搜索">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.5 2a8.5 8.5 0 1 0 5.26 15.17l4.53 4.54a.75.75 0 0 0 1.06-1.06l-4.53-4.54A8.5 8.5 0 0 0 10.5 2Zm-7 8.5a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z" fill-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+              <div class="search-input-wrap">
+                <svg viewBox="0 0 24 24">
+                  <path d="M10.5 2a8.5 8.5 0 1 0 5.26 15.17l4.53 4.54a.75.75 0 0 0 1.06-1.06l-4.53-4.54A8.5 8.5 0 0 0 10.5 2Zm-7 8.5a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z" fill-rule="evenodd" />
+                </svg>
+                <input type="text" placeholder="Search apple.com" />
+              </div>
+              <div class="search-quick-links">
+                <span>Quick Links</span>
+                <a href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+              </div>
+            </div>
+          </div>
+          <!-- 购物袋 -->
+          <button class="nav-icon-btn" aria-label="购物袋">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.25 6.5A1.75 1.75 0 0 1 6 4.75h12a1.75 1.75 0 0 1 1.75 1.75v13A1.75 1.75 0 0 1 18 21.25H6a1.75 1.75 0 0 1-1.75-1.75v-13Zm1.75-.25a.25.25 0 0 0-.25.25v13c0 .14.11.25.25.25h12c.14 0 .25-.11.25-.25v-13a.25.25 0 0 0-.25-.25H6ZM9.5 9a.75.75 0 0 1-.75-.75 3.25 3.25 0 0 1 6.5 0 .75.75 0 0 1-1.5 0 1.75 1.75 0 1 0-3.5 0A.75.75 0 0 1 9.5 9Z" fill-rule="evenodd" />
+            </svg>
+          </button>
+          <!-- 汉堡菜单（移动端） -->
+          <button class="hamburger" id="hamburgerBtn" aria-label="菜单" aria-expanded="false">
+            <span class="hamburger-line"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <!-- ==================== 移动端遮罩层 ==================== -->
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+    <!-- ==================== 移动端侧滑菜单 ==================== -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-section">
+        <div class="mobile-menu-category">Shop</div>
+        <a href="#">Shop the Latest</a>
+        <a href="#">Mac</a>
+        <a href="#">iPad</a>
+        <a href="#">iPhone</a>
+        <a href="#">Apple Watch</a>
+        <a href="#">Apple Vision Pro</a>
+        <a href="#">Accessories</a>
+      </div>
+      <div class="mobile-menu-section">
+        <div class="mobile-menu-category">Products</div>
+        <a href="#">Mac</a>
+        <a href="#">iPad</a>
+        <a href="#">iPhone</a>
+        <a href="#">Watch</a>
+        <a href="#">Vision</a>
+        <a href="#">AirPods</a>
+        <a href="#">TV &amp; Home</a>
+      </div>
+      <div class="mobile-menu-section">
+        <div class="mobile-menu-category">Services</div>
+        <a href="#">Apple Music</a>
+        <a href="#">Apple TV+</a>
+        <a href="#">Apple Arcade</a>
+        <a href="#">App Store</a>
+      </div>
+      <div class="mobile-menu-section">
+        <a href="#">Support</a>
+        <a href="#">Find a Store</a>
+      </div>
+    </div>
+    <!-- ==================== 页面内容演示 ==================== -->
+    <main>
+      <section class="hero-section">
+        <h1>EDT后台管理</h1>
+        <p class="subhead">免费vpn节点 · 优选IP · 优选域名 · 代理指定国家IP</p>
+      </section>
+      <section class="content-section">
+        <h2>多方案</h2>
+        <p>
+          优选订阅地址：主要是高手整合，直接可以使用。
+          <strong>ip对应国家可能不准</strong>
+          proxyip订阅：可以指定国家IP地址。
+        </p>
+        <h2>Cloudflare 优选IP API（仅IPV4）</h2>
+        <p>
+          DOMAIN API<br>
+          ✓ https://raw.githubusercontent.com/LancelotRar/best-cf-domains/main/best-cf-domain.txt<br>
+          DOMAIN API Lite<br>
+          ✓ https://raw.githubusercontent.com/LancelotRar/best-cf-domains/main/best-cf-domain-lite.txt<br>
+          聚合 API<br>
+          ✓ https://raw.githubusercontent.com/LancelotRar/best-cf-ips/main/best-cf-ip-collected.txt<br>
+          独立 API<br>
+          ✓ best-cf-ip-scanned-top20 包含 20 个优选 IP。<br>
+          https://raw.githubusercontent.com/LancelotRar/best-cf-ips/main/best-cf-ip-scanned-top20.txt<br>
+          ✓ best-cf-ip-scanned-top50 包含 50 个优选 IP，向上包含。<br>
+          https://raw.githubusercontent.com/LancelotRar/best-cf-ips/main/best-cf-ip-scanned-top50.txt
+        </p>
+        <div class="apd-grid" data-apd-animate>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">Cloudflare管理面板</h3>
+            <p class="apd-desc">dash.cloudflare.com</p>
+            <a href="https://dash.cloudflare.com/" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">l02.ccwu.cc/admin</p>
+            <a href="https://l02.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">0k.ccwu.cc/admin</p>
+            <a href="https://0k.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">0r.ccwu.cc/admin</p>
+            <a href="https://0r.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">0h.ccwu.cc/admin</p>
+            <a href="https://0h.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">r0.ccwu.cc/admin</p>
+            <a href="https://r0.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">rll.ccwu.cc/admin</p>
+            <a href="https://l02.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">r02.ccwu.cc/admin</p>
+            <a href="https://r02.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">i0.ccwu.cc/admin</p>
+            <a href="https://i0.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">o02.ccwu.cc/admin</p>
+            <a href="https://o02.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">e0.ccwu.cc/admin</p>
+            <a href="https://e0.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">n0.ccwu.cc/admin</p>
+            <a href="https://l02.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">lorraine.ccwu.cc/admin</p>
+            <a href="https://lorraine.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">leehui.ccwu.cc/admin</p>
+            <a href="https://leehui.ccwu.cc/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">lorraine.de5.net/admin</p>
+            <a href="https://lorraine.de5.net/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+          <div class="apd-card" tabindex="0" role="button">
+            <h3 class="apd-title">EDTunnel 管理面板</h3>
+            <p class="apd-desc">lorrainel.cc.cd/admin</p>
+            <a href="https://lorrainel.cc.cd/admin" class="open-btn" target="_blank">进入面板</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ==================== Apple 风格 Footer ==================== -->
+    <footer class="global-footer">
+      <div class="footer-container">
+        <!-- 顶部免责声明 -->
+        <div class="footer-disclaimer">
+          <p>
+            * 以上展示内容仅为设计参考。Apple、Apple 标志、iPhone、iPad、Mac、Apple Watch、
+            Apple Vision Pro、AirPods 均为 Apple Inc. 在美国及其他国家/地区的注册商标。
+          </p>
+          <p>
+            本页面仅用于展示网页设计效果，与 Apple Inc. 无任何关联。
+          </p>
+        </div>
+        <div class="footer-divider"></div>
+        <!-- 主导航列 -->
+        <div class="footer-columns">
+          <!-- 第1列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Shop and Learn</h4>
+            <ul>
+              <li><a href="#">Store</a></li>
+              <li><a href="#">Mac</a></li>
+              <li><a href="#">iPad</a></li>
+              <li><a href="#">iPhone</a></li>
+              <li><a href="#">Watch</a></li>
+              <li><a href="#">Vision</a></li>
+              <li><a href="#">AirPods</a></li>
+              <li><a href="#">TV &amp; Home</a></li>
+              <li><a href="#">AirTag</a></li>
+              <li><a href="#">Accessories</a></li>
+              <li><a href="#">Gift Cards</a></li>
+            </ul>
+          </div>
+          <!-- 第2列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Apple Wallet</h4>
+            <ul>
+              <li><a href="#">Wallet</a></li>
+              <li><a href="#">Apple Card</a></li>
+              <li><a href="#">Apple Pay</a></li>
+              <li><a href="#">Apple Cash</a></li>
+            </ul>
+          </div>
+          <!-- 第3列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Account</h4>
+            <ul>
+              <li><a href="#">Manage Your Apple Account</a></li>
+              <li><a href="#">Apple Store Account</a></li>
+              <li><a href="#">iCloud.com</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">Entertainment</h4>
+            <ul>
+              <li><a href="#">Apple Music</a></li>
+              <li><a href="#">Apple TV+</a></li>
+              <li><a href="#">Apple Arcade</a></li>
+              <li><a href="#">Apple Podcasts</a></li>
+              <li><a href="#">App Store</a></li>
+            </ul>
+          </div>
+          <!-- 第4列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Apple Store</h4>
+            <ul>
+              <li><a href="#">Find a Store</a></li>
+              <li><a href="#">Genius Bar</a></li>
+              <li><a href="#">Today at Apple</a></li>
+              <li><a href="#">Apple Camp</a></li>
+              <li><a href="#">Apple Trade In</a></li>
+              <li><a href="#">Financing</a></li>
+              <li><a href="#">Order Status</a></li>
+              <li><a href="#">Shopping Help</a></li>
+            </ul>
+          </div>
+          <!-- 第5列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">For Business</h4>
+            <ul>
+              <li><a href="#">Apple and Business</a></li>
+              <li><a href="#">Shop for Business</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">For Education</h4>
+            <ul>
+              <li><a href="#">Apple and Education</a></li>
+              <li><a href="#">Shop for University</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">For Healthcare</h4>
+            <ul>
+              <li><a href="#">Apple in Healthcare</a></li>
+              <li><a href="#">Health on Apple Watch</a></li>
+            </ul>
+          </div>
+          <!-- 第6列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Apple Values</h4>
+            <ul>
+              <li><a href="#">Accessibility</a></li>
+              <li><a href="#">Education</a></li>
+              <li><a href="#">Environment</a></li>
+              <li><a href="#">Privacy</a></li>
+              <li><a href="#">Supply Chain</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">About Apple</h4>
+            <ul>
+              <li><a href="#">Newsroom</a></li>
+              <li><a href="#">Apple Leadership</a></li>
+              <li><a href="#">Career Opportunities</a></li>
+              <li><a href="#">Investors</a></li>
+              <li><a href="#">Ethics &amp; Compliance</a></li>
+              <li><a href="#">Events</a></li>
+              <li><a href="#">Contact Apple</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-divider"></div>
+        <!-- 底部最下栏 -->
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            Copyright &copy; 2026 Apple Inc. All rights reserved.
+          </p>
+          <div class="footer-legal">
+            <a href="#">Privacy Policy</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Terms of Use</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Sales and Refunds</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Legal</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Site Map</a>
+          </div>
+          <p class="footer-locale">
+            <a href="#">中国</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script>
+      // ==================== 滚动时导航栏样式变化 ====================
+      const nav = document.getElementById('globalNav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+      // ==================== 搜索面板切换 ====================
+      const searchBtn = document.getElementById('searchBtn');
+      const searchDropdown = document.getElementById('searchDropdown');
+      searchBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        searchDropdown.classList.toggle('active');
+      });
+      // 点击外部关闭搜索面板
+      document.addEventListener('click', (e) => {
+        if (!searchDropdown.contains(e.target) && e.target !== searchBtn) {
+          searchDropdown.classList.remove('active');
+        }
+      });
+      // ESC 关闭搜索面板
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          searchDropdown.classList.remove('active');
+        }
+      });
+      // ==================== 移动端菜单 ====================
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileOverlay = document.getElementById('mobileOverlay');
+
+      function openMobileMenu() {
+        hamburgerBtn.classList.add('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+        mobileMenu.classList.add('active');
+        mobileOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        hamburgerBtn.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('active');
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      hamburgerBtn.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      });
+      mobileOverlay.addEventListener('click', closeMobileMenu);
+      // ESC 关闭移动菜单
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        }
+      });
+      // ==================== 键盘可访问性：下拉菜单 ====================
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const btn = item.querySelector('.nav-link');
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            // Toggle logic if needed
+          }
+        });
+      });
+      // ==================== 实时北京时间（毫秒级） ====================
+      (function() {
+        const clockEl = document.getElementById('bjClock');
+        if (!clockEl) return;
+        const timeSpan = clockEl.querySelector('.clock-time');
+        const msSpan = clockEl.querySelector('.clock-ms');
+        // 使用 Intl.DateTimeFormat 获取北京时间的各部分
+        const formatter = new Intl.DateTimeFormat('zh-CN', {
+          timeZone: 'Asia/Shanghai',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        });
+
+        function updateClock() {
+          const now = new Date();
+          // 格式化时分秒
+          const parts = formatter.formatToParts(now);
+          const timeStr = parts
+            .filter(p => ['hour', 'minute', 'second'].includes(p.type))
+            .map(p => p.value)
+            .join(':');
+          // 提取毫秒并补零
+          const ms = String(now.getMilliseconds()).padStart(3, '0');
+          timeSpan.textContent = timeStr;
+          msSpan.textContent = '.' + ms;
+          requestAnimationFrame(updateClock);
+        }
+        // 启动循环
+        requestAnimationFrame(updateClock);
+      })();
+      // ✅ 轻量级触发脚本（无依赖，<1KB）
+      (function() {
+        const grid = document.querySelector('.apd-grid[data-apd-animate]');
+        if (!grid) return;
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            grid.classList.add('apd-loaded');
+            observer.unobserve(grid);
+          }
+        }, {
+          threshold: 0.1
+        });
+        observer.observe(grid);
+      })();
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          // 获取要复制的内容
+          let text = btn.dataset.copyText;
+          if (!text && btn.dataset.copyTarget) {
+            const target = document.querySelector(btn.dataset.copyTarget);
+            text = target ? target.textContent.trim() : '';
+          }
+          if (!text) return;
+          try {
+            await navigator.clipboard.writeText(text);
+            // 图标切换
+            const iconCopy = btn.querySelector('.icon-copy');
+            const iconCheck = btn.querySelector('.icon-check');
+            const btnText = btn.querySelector('.btn-text');
+            if (iconCopy && iconCheck) {
+              iconCopy.style.display = 'none';
+              iconCheck.style.display = 'block';
+            }
+            if (btnText) btnText.textContent = '已复制';
+            btn.classList.add('copied', 'show-tooltip');
+            // 2秒后恢复
+            setTimeout(() => {
+              if (iconCopy && iconCheck) {
+                iconCopy.style.display = 'block';
+                iconCheck.style.display = 'none';
+              }
+              if (btnText) btnText.textContent = '复制';
+              btn.classList.remove('copied', 'show-tooltip');
+            }, 2000);
+          } catch (err) {
+            console.error('复制失败:', err);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
