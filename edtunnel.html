@@ -1096,6 +1096,14 @@
         background: rgba(255, 255, 255, 0.08);
         color: #f5f5f7;
       }
+      @keyframes edt_fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+      }
+      #edt-search-input:focus { border-color: rgba(100,150,255,0.5) !important; }
+#edt-clear-btn:hover { background: rgba(255,255,255,0.12) !important; color: #fff !important; }
+#edt-add-btn:hover { border-color: rgba(100,150,255,0.5) !important; color: rgba(100,150,255,0.8) !important; }
+#edt-batch-btn:hover { border-color: rgba(100,150,255,0.5) !important; color: rgba(100,150,255,0.8) !important; }
     </style>
   </head>
   <body>
@@ -1415,37 +1423,41 @@
             <p class="apd-desc">dash.cloudflare.com</p>
             <a href="https://dash.cloudflare.com/" class="open-btn" target="_blank">进入面板</a>
           </div>
+        </div>
           <!--2-->
-          <!-- EDTunnel 管理面板 - 动态版 -->
-<div class="card" style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 24px; margin: 20px 0; backdrop-filter: blur(10px);">
-    <h3 style="color: #fff; margin-bottom: 8px; font-size: 20px;">EDTunnel 管理面板</h3>
-    <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 20px;">面板地址和密码只存储在你的浏览器本地</p>
-    
-    <div id="edt-panel-list"></div>
-    
-    <button onclick="addEdtPanel()" style="width: 100%; padding: 12px; background: transparent; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 14px; margin-top: 12px; transition: all 0.3s;" onmouseover="this.style.borderColor='rgba(100,150,255,0.5)';this.style.color='rgba(100,150,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.5)'">+ 添加更多</button>
-</div>
+<!-- ====== EDTunnel 管理面板 - 动态版（含过滤）====== -->
+        <div id="edt-panel-card" style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 24px; margin: 20px 0; backdrop-filter: blur(10px);">
+            <h3 style="color: #fff; margin-bottom: 8px; font-size: 20px;">EDTunnel 管理面板</h3>
+            <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 16px;">面板地址和密码只存储在你的浏览器本地</p>
+            
+            <!-- 搜索过滤栏 -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                <input type="text" id="edt-search-input" 
+                    placeholder="🔍 输入关键词过滤面板地址..."
+                    oninput="edt_filterPanels(this.value)"
+                    style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 14px; outline: none; box-sizing: border-box; transition: border-color 0.3s;"
+                    onfocus="this.style.borderColor='rgba(100,150,255,0.5)'"
+                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                />
+                <button onclick="edt_clearSearch()" 
+                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.3s;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.color='#fff'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.6)'"
+                >清除</button>
+                <span id="edt-filter-count" style="color: rgba(255,255,255,0.4); font-size: 12px; white-space: nowrap;"></span>
+            </div>
 
-<script>
-// 默认面板列表（你原来的那些地址）
-const defaultPanels = [
-    { url: 'l02.ccwu.cc', password: '' },
-    { url: '0k.ccwu.cc', password: '' },
-    { url: '0r.ccwu.cc', password: '' },
-    { url: '0h.ccwu.cc', password: '' },
-    { url: 'r0.ccwu.cc', password: '' },
-    { url: 'rll.ccwu.cc', password: '' },
-    { url: 'r02.ccwu.cc', password: '' },
-    { url: 'i0.ccwu.cc', password: '' },
-    { url: 'o02.ccwu.cc', password: '' },
-    { url: 'e0.ccwu.cc', password: '' },
-    { url: 'n0.ccwu.cc', password: '' },
-    { url: 'lorraine.ccwu.cc', password: '' },
-    { url: 'leehui.ccwu.cc', password: '' },
-    { url: 'lorraine.de5.net', password: '' },
-    { url: 'lorrainel.cc.cd', password: '' }
-];
-
+            <!-- 快捷过滤标签 -->
+            <div id="edt-quick-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;"></div>
+            
+            <!-- 面板列表容器 -->
+            <div id="edt-panel-list"></div>
+            
+            <!-- 底部按钮 -->
+            <div style="display: flex; gap: 10px; margin-top: 12px;">
+                <button onclick="edt_addPanel()" style="flex: 1; padding: 12px; background: transparent; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 14px; transition: all 0.3s;" onmouseover="this.style.borderColor='rgba(100,150,255,0.5)';this.style.color='rgba(100,150,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.5)'">+ 添加更多</button>
+                <button onclick="edt_batchAdd()" style="padding: 12px 16px; background: transparent; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 14px; transition: all 0.3s; white-space: nowrap;" onmouseover="this.style.borderColor='rgba(100,150,255,0.5)';this.style.color='rgba(100,150,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.5)'">批量添加</button>
+            </div>
         </div>
       </section>
     </main>
@@ -1776,138 +1788,283 @@ function togglePass(btn) {
     }
 }
     </script>
-    <script>
-// 默认面板列表（你原来的那些地址）
-const defaultPanels = [
-    { url: 'l02.ccwu.cc', password: '' },
-    { url: '0k.ccwu.cc', password: '' },
-    { url: '0r.ccwu.cc', password: '' },
-    { url: '0h.ccwu.cc', password: '' },
-    { url: 'r0.ccwu.cc', password: '' },
-    { url: 'rll.ccwu.cc', password: '' },
-    { url: 'r02.ccwu.cc', password: '' },
-    { url: 'i0.ccwu.cc', password: '' },
-    { url: 'o02.ccwu.cc', password: '' },
-    { url: 'e0.ccwu.cc', password: '' },
-    { url: 'n0.ccwu.cc', password: '' },
-    { url: 'lorraine.ccwu.cc', password: '' },
-    { url: 'leehui.ccwu.cc', password: '' },
-    { url: 'lorraine.de5.net', password: '' },
-    { url: 'lorrainel.cc.cd', password: '' }
-];
+<script>
+(function() {
+    'use strict';
 
-function getEdtPanels() {
-    let panels = localStorage.getItem('edt_panels');
-    if (!panels) {
-        localStorage.setItem('edt_panels', JSON.stringify(defaultPanels));
-        return defaultPanels;
+    var DEFAULT_PANELS = [
+        { url: 'l02.ccwu.cc', password: '' },
+        { url: '0k.ccwu.cc', password: '' },
+        { url: '0r.ccwu.cc', password: '' },
+        { url: '0h.ccwu.cc', password: '' },
+        { url: 'r0.ccwu.cc', password: '' },
+        { url: 'rll.ccwu.cc', password: '' },
+        { url: 'r02.ccwu.cc', password: '' },
+        { url: 'i0.ccwu.cc', password: '' },
+        { url: 'o02.ccwu.cc', password: '' },
+        { url: 'e0.ccwu.cc', password: '' },
+        { url: 'n0.ccwu.cc', password: '' },
+        { url: 'lorraine.ccwu.cc', password: '' },
+        { url: 'leehui.ccwu.cc', password: '' },
+        { url: 'lorraine.de5.net', password: '' },
+        { url: 'lorrainel.cc.cd', password: '' }
+    ];
+
+    var STORAGE_KEY = 'edt_panels_v2';
+    var currentFilter = '';
+
+    // ===== 数据操作 =====
+    function getPanels() {
+        try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) { localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PANELS)); return JSON.parse(JSON.stringify(DEFAULT_PANELS)); }
+            return JSON.parse(raw);
+        } catch (e) { return JSON.parse(JSON.stringify(DEFAULT_PANELS)); }
     }
-    return JSON.parse(panels);
-}
 
-function saveEdtPanels(panels) {
-    localStorage.setItem('edt_panels', JSON.stringify(panels));
-}
+    function savePanels(panels) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(panels));
+    }
 
-function renderEdtPanels() {
-    const panels = getEdtPanels();
-    const container = document.getElementById('edt-panel-list');
-    container.innerHTML = '';
-    
-    panels.forEach((panel, index) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);';
-        div.innerHTML = `
-            <div style="flex: 1; min-width: 0;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <input type="text" value="${panel.url}" 
-                        onchange="updatePanel(${index}, 'url', this.value)"
-                        placeholder="面板地址，如 xxx.ccwu.cc"
-                        style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 6px 10px; color: #fff; font-size: 13px; outline: none; min-width: 0;"
-                        onfocus="this.style.borderColor='rgba(100,150,255,0.5)'"
-                        onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
-                    />
-                </div>
-                <input type="password" value="${panel.password}" 
-                    onchange="updatePanel(${index}, 'password', this.value)"
-                    placeholder="密码（可选）"
-                    style="width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 6px 10px; color: #fff; font-size: 13px; outline: none; box-sizing: border-box;"
-                    onfocus="this.style.borderColor='rgba(100,150,255,0.5)'"
-                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
-                />
-            </div>
-            <button onclick="removeEdtPanel(${index})" 
-                style="background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 18px; padding: 4px 8px; transition: color 0.3s;"
-                onmouseover="this.style.color='#ff4444'"
-                onmouseout="this.style.color='rgba(255,255,255,0.3)'"
-                title="删除">×</button>
-            <button onclick="goToPanel(${index})"
-                style="background: linear-gradient(135deg, #4a7cf7, #6366f1); border: none; border-radius: 8px; padding: 8px 16px; color: #fff; cursor: pointer; font-size: 13px; white-space: nowrap; transition: opacity 0.3s;"
-                onmouseover="this.style.opacity='0.85'"
-                onmouseout="this.style.opacity='1'"
-            >进入面板</button>
-            ${panel.password ? `<button onclick="copyPassword(${index})"
-                style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 12px; white-space: nowrap; transition: all 0.3s;"
-                onmouseover="this.style.background='rgba(255,255,255,0.12)'"
-                onmouseout="this.style.background='rgba(255,255,255,0.08)'"
-            >复制密码</button>` : ''}
-        `;
-        container.appendChild(div);
-    });
-}
+    // ===== 工具函数 =====
+    function extractSuffix(url) {
+        if (!url) return '';
+        var p = url.split('.');
+        return p.length >= 2 ? p.slice(-2).join('.') : url;
+    }
 
-function addEdtPanel() {
-    const panels = getEdtPanels();
-    panels.push({ url: '', password: '' });
-    saveEdtPanels(panels);
-    renderEdtPanels();
-}
+    function escapeHtml(str) {
+        return (str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
 
-function removeEdtPanel(index) {
-    const panels = getEdtPanels();
-    panels.splice(index, 1);
-    saveEdtPanels(panels);
-    renderEdtPanels();
-}
+    // ===== Toast =====
+    function showToast(msg) {
+        var t = document.getElementById('edt-toast-el');
+        if (!t) {
+            t = document.createElement('div');
+            t.id = 'edt-toast-el';
+            t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(30,30,50,0.95);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:99999;border:1px solid rgba(100,150,255,0.3);backdrop-filter:blur(10px);transition:opacity 0.3s;pointer-events:none;opacity:0;';
+            document.body.appendChild(t);
+        }
+        t.textContent = msg;
+        t.style.opacity = '1';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function() { t.style.opacity = '0'; }, 2000);
+    }
 
-function updatePanel(index, field, value) {
-    const panels = getEdtPanels();
-    panels[index][field] = value.trim();
-    saveEdtPanels(panels);
-    // 如果改了密码，重新渲染以更新"复制密码"按钮
-    if (field === 'password') renderEdtPanels();
-}
+    // ===== 渲染快捷标签 =====
+    function renderQuickTags() {
+        var panels = getPanels();
+        var map = {};
+        panels.forEach(function(p) { if (p.url) { var s = extractSuffix(p.url); map[s] = (map[s]||0)+1; } });
+        var box = document.getElementById('edt-quick-tags');
+        if (!box) return;
+        box.innerHTML = '';
+        Object.entries(map).sort(function(a,b){return b[1]-a[1];}).forEach(function(item) {
+            var suffix = item[0], count = item[1];
+            var active = currentFilter === suffix;
+            var tag = document.createElement('span');
+            tag.textContent = suffix + ' (' + count + ')';
+            tag.style.cssText = 'display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.3s;user-select:none;'
+                + 'background:' + (active?'rgba(100,150,255,0.3)':'rgba(255,255,255,0.06)') + ';'
+                + 'border:1px solid ' + (active?'rgba(100,150,255,0.5)':'rgba(255,255,255,0.1)') + ';'
+                + 'color:' + (active?'#8ab4ff':'rgba(255,255,255,0.5)') + ';';
+            tag.addEventListener('click', function() {
+                if (currentFilter === suffix) { currentFilter = ''; document.getElementById('edt-search-input').value = ''; }
+                else { currentFilter = suffix; document.getElementById('edt-search-input').value = suffix; }
+                renderPanels(); renderQuickTags();
+            });
+            tag.addEventListener('mouseenter', function() { if (!active) { this.style.background='rgba(255,255,255,0.1)'; this.style.color='rgba(255,255,255,0.7)'; } });
+            tag.addEventListener('mouseleave', function() { if (!active) { this.style.background='rgba(255,255,255,0.06)'; this.style.color='rgba(255,255,255,0.5)'; } });
+            box.appendChild(tag);
+        });
+    }
 
-function goToPanel(index) {
-    const panels = getEdtPanels();
-    const panel = panels[index];
-    if (!panel.url) { alert('请先输入面板地址'); return; }
-    let url = panel.url.trim();
-    if (!url.startsWith('http')) url = 'https://' + url;
-    if (!url.endsWith('/admin')) url = url.replace(/\/$/, '') + '/admin';
-    window.open(url, '_blank');
-}
+    // ===== 渲染面板列表 =====
+    function renderPanels() {
+        var panels = getPanels();
+        var box = document.getElementById('edt-panel-list');
+        if (!box) return;
+        box.innerHTML = '';
+        var visible = 0;
 
-function copyPassword(index) {
-    const panels = getEdtPanels();
-    const pwd = panels[index].password;
-    if (!pwd) { alert('没有密码'); return; }
-    navigator.clipboard.writeText(pwd).then(() => {
-        alert('密码已复制到剪贴板');
-    }).catch(() => {
-        // fallback
-        const ta = document.createElement('textarea');
-        ta.value = pwd;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
+        panels.forEach(function(panel, idx) {
+            if (currentFilter) {
+                if ((panel.url||'').toLowerCase().indexOf(currentFilter) === -1 && (panel.password||'').toLowerCase().indexOf(currentFilter) === -1) return;
+            }
+            visible++;
+
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.06);transition:all 0.3s;animation:edt_fadeIn 0.2s ease;';
+            row.addEventListener('mouseenter', function(){this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.12)';});
+            row.addEventListener('mouseleave', function(){this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.06)';});
+
+            // 输入区
+            var inputs = document.createElement('div');
+            inputs.style.cssText = 'flex:1;min-width:0;';
+
+            var urlInput = document.createElement('input');
+            urlInput.type = 'text';
+            urlInput.value = panel.url || '';
+            urlInput.placeholder = '面板地址，如 xxx.ccwu.cc';
+            urlInput.style.cssText = 'width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 10px;color:#fff;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:6px;';
+            urlInput.addEventListener('focus', function(){this.style.borderColor='rgba(100,150,255,0.5)';});
+            urlInput.addEventListener('blur', function(){this.style.borderColor='rgba(255,255,255,0.1)'; updateField(idx,'url',this.value);});
+
+            var pwdInput = document.createElement('input');
+            pwdInput.type = 'password';
+            pwdInput.value = panel.password || '';
+            pwdInput.placeholder = '密码（可选）';
+            pwdInput.style.cssText = 'width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 10px;color:#fff;font-size:13px;outline:none;box-sizing:border-box;';
+            pwdInput.addEventListener('focus', function(){this.style.borderColor='rgba(100,150,255,0.5)';});
+            pwdInput.addEventListener('blur', function(){this.style.borderColor='rgba(255,255,255,0.1)'; updateField(idx,'password',this.value);});
+
+            inputs.appendChild(urlInput);
+            inputs.appendChild(pwdInput);
+
+            // 删除按钮
+            var delBtn = document.createElement('button');
+            delBtn.textContent = '×';
+            delBtn.title = '删除';
+            delBtn.style.cssText = 'background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:18px;padding:4px 8px;transition:color 0.3s;';
+            delBtn.addEventListener('mouseenter', function(){this.style.color='#ff4444';});
+            delBtn.addEventListener('mouseleave', function(){this.style.color='rgba(255,255,255,0.3)';});
+            delBtn.addEventListener('click', function(){ removePanel(idx); });
+
+            // 进入面板按钮
+            var goBtn = document.createElement('button');
+            goBtn.textContent = '进入面板';
+            goBtn.style.cssText = 'background:linear-gradient(135deg,#4a7cf7,#6366f1);border:none;border-radius:8px;padding:8px 16px;color:#fff;cursor:pointer;font-size:13px;white-space:nowrap;transition:opacity 0.3s;';
+            goBtn.addEventListener('mouseenter', function(){this.style.opacity='0.85';});
+            goBtn.addEventListener('mouseleave', function(){this.style.opacity='1';});
+            goBtn.addEventListener('click', function(){ goPanel(idx); });
+
+            row.appendChild(inputs);
+            row.appendChild(delBtn);
+            row.appendChild(goBtn);
+
+            // 复制密码按钮
+            if (panel.password) {
+                var cpBtn = document.createElement('button');
+                cpBtn.textContent = '复制密码';
+                cpBtn.style.cssText = 'background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:rgba(255,255,255,0.7);cursor:pointer;font-size:12px;white-space:nowrap;transition:all 0.3s;';
+                cpBtn.addEventListener('mouseenter', function(){this.style.background='rgba(255,255,255,0.12)';});
+                cpBtn.addEventListener('mouseleave', function(){this.style.background='rgba(255,255,255,0.08)';});
+                cpBtn.addEventListener('click', function(){ copyPwd(idx); });
+                row.appendChild(cpBtn);
+            }
+
+            box.appendChild(row);
+        });
+
+        var countEl = document.getElementById('edt-filter-count');
+        if (countEl) countEl.textContent = currentFilter ? (visible+'/'+panels.length) : ('共 '+panels.length+' 个');
+
+        if (visible === 0 && currentFilter) {
+            box.innerHTML = '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);font-size:14px;"><div style="font-size:32px;margin-bottom:8px;">🔍</div>没有找到匹配 "'+escapeHtml(currentFilter)+'" 的面板</div>';
+        }
+    }
+
+    // ===== 数据操作函数 =====
+    function updateField(idx, field, value) {
+        var panels = getPanels();
+        if (panels[idx]) {
+            panels[idx][field] = (value||'').trim();
+            savePanels(panels);
+            if (field === 'password') { renderPanels(); renderQuickTags(); }
+        }
+    }
+
+    function removePanel(idx) {
+        if (!confirm('确定删除这个面板？')) return;
+        var panels = getPanels();
+        panels.splice(idx, 1);
+        savePanels(panels);
+        renderPanels(); renderQuickTags();
+    }
+
+    function goPanel(idx) {
+        var panels = getPanels();
+        var p = panels[idx];
+        if (!p || !p.url) { alert('请先输入面板地址'); return; }
+        var url = p.url.trim();
+        if (url.indexOf('http') !== 0) url = 'https://' + url;
+        if (url.indexOf('/admin') === -1) url = url.replace(/\/$/,'') + '/admin';
+        window.open(url, '_blank');
+    }
+
+    function copyPwd(idx) {
+        var panels = getPanels();
+        var pwd = panels[idx] ? panels[idx].password : '';
+        if (!pwd) { alert('没有密码'); return; }
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(pwd).then(function(){ showToast('✅ 密码已复制到剪贴板'); }).catch(function(){ fallbackCopy(pwd); });
+        } else { fallbackCopy(pwd); }
+    }
+
+    function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px;';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); showToast('✅ 密码已复制到剪贴板'); } catch(e) { alert('复制失败'); }
         document.body.removeChild(ta);
-        alert('密码已复制到剪贴板');
-    });
-}
+    }
 
-// 页面加载时渲染
-document.addEventListener('DOMContentLoaded', renderEdtPanels);
+    function addPanel() {
+        var panels = getPanels();
+        panels.push({ url: '', password: '' });
+        savePanels(panels);
+        currentFilter = '';
+        var si = document.getElementById('edt-search-input');
+        if (si) si.value = '';
+        renderPanels(); renderQuickTags();
+    }
+
+    function batchAdd() {
+        var input = prompt('批量添加面板地址，每行一个：\n例如：\nabc.ccwu.cc\ndef.ccwu.cc');
+        if (!input) return;
+        var urls = input.split('\n').map(function(s){return s.trim();}).filter(function(s){return s;});
+        if (!urls.length) return;
+        var panels = getPanels(), added = 0;
+        urls.forEach(function(u) {
+            if (!panels.some(function(p){return p.url===u;})) { panels.push({url:u,password:''}); added++; }
+        });
+        savePanels(panels);
+        renderPanels(); renderQuickTags();
+        showToast('已添加 '+added+' 个面板（重复已跳过）');
+    }
+
+    // ===== 初始化：绑定事件 + 首次渲染 =====
+    function init() {
+        var searchInput = document.getElementById('edt-search-input');
+        var clearBtn = document.getElementById('edt-clear-btn');
+        var addBtn = document.getElementById('edt-add-btn');
+        var batchBtn = document.getElementById('edt-batch-btn');
+
+        if (searchInput) searchInput.addEventListener('input', function() {
+            currentFilter = (this.value||'').trim().toLowerCase();
+            renderPanels(); renderQuickTags();
+        });
+        if (clearBtn) clearBtn.addEventListener('click', function() {
+            currentFilter = '';
+            var si = document.getElementById('edt-search-input');
+            if (si) si.value = '';
+            renderPanels(); renderQuickTags();
+        });
+        if (addBtn) addBtn.addEventListener('click', addPanel);
+        if (batchBtn) batchBtn.addEventListener('click', batchAdd);
+
+        renderPanels();
+        renderQuickTags();
+    }
+
+    // 安全初始化
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
 </script>
     <div class="toast" id="toast"></div>
   </body>
