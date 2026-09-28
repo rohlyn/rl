@@ -858,17 +858,14 @@
       /* Apple Dark Grid - 与 .apd-card 配套使用 */
       .apd-grid {
         display: grid;
-        /* 自适应列宽：最小300px，自动填充剩余空间 */
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px,320px));
+        justify-content:center;
         gap: 20px;
-        /* Apple 标准间距节奏 */
         width: 100%;
         max-width: 1200px;
-        /* 防止超宽屏卡片过宽失真 */
         margin: 0 auto;
-        /* 居中约束 */
         align-items: start;
-        margin-buttom: 20px;
+        margin-bottom: 20px;
       }
 
       /* 移动端优化：小屏强制单列 + 缩小间距 */
@@ -1592,7 +1589,7 @@
         <!-- 底部最下栏 -->
         <div class="footer-bottom">
           <p class="footer-copyright">
-            Copyright &copy; 2026 Apple Inc. All rights reserved.
+            Copyright &copy; 2026 Rholyn Inc. All rights reserved.
           </p>
           <div class="footer-legal">
             <a href="#">Privacy Policy</a>
@@ -2031,7 +2028,7 @@
           var url = p.url.trim();
           if (url.indexOf('http') !== 0) url = 'https://' + url;
           if (url.indexOf('/admin') === -1) url = url.replace(/\/$/, '') + '/admin';
-          window.open(url, '_blank');
+          window.open(url,'_blank','noopener,noreferrer');
         }
 
         function copyPwd(idx) {
