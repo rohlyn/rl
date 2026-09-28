@@ -1684,9 +1684,10 @@
           const parts = formatter.formatToParts(now);
           timeSpan.textContent = parts.filter(p => ['hour', 'minute', 'second'].includes(p.type)).map(p => p.value).join(':');
           msSpan.textContent = '.' + String(now.getMilliseconds()).padStart(3, '0');
-          setTimeout(updateClock, 50);
+          requestAnimationFrame(updateClock);
           }
-          updateClock();
+          requestAnimationFrame(updateClock);
+          })();
       // ==================== 卡片入场动画 ====================
       (function() {
         const grid = document.querySelector('.apd-grid[data-apd-animate]');
