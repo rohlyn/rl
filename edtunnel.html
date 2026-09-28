@@ -858,14 +858,17 @@
       /* Apple Dark Grid - 与 .apd-card 配套使用 */
       .apd-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px,320px));
-        justify-content:center;
+        /* 自适应列宽：最小300px，自动填充剩余空间 */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 20px;
+        /* Apple 标准间距节奏 */
         width: 100%;
         max-width: 1200px;
+        /* 防止超宽屏卡片过宽失真 */
         margin: 0 auto;
+        /* 居中约束 */
         align-items: start;
-        margin-bottom: 20px;
+        margin-buttom: 20px;
       }
 
       /* 移动端优化：小屏强制单列 + 缩小间距 */
@@ -1589,7 +1592,7 @@
         <!-- 底部最下栏 -->
         <div class="footer-bottom">
           <p class="footer-copyright">
-            Copyright &copy; 2026 Rholyn Inc. All rights reserved.
+            Copyright &copy; 2026 Apple Inc. All rights reserved.
           </p>
           <div class="footer-legal">
             <a href="#">Privacy Policy</a>
@@ -1608,7 +1611,6 @@
         </div>
       </div>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script>
       // ==================== 导航栏滚动样式 ====================
       const nav = document.getElementById('globalNav');
@@ -1682,8 +1684,10 @@
           const parts = formatter.formatToParts(now);
           timeSpan.textContent = parts.filter(p => ['hour', 'minute', 'second'].includes(p.type)).map(p => p.value).join(':');
           msSpan.textContent = '.' + String(now.getMilliseconds()).padStart(3, '0');
-          setTimeout(updateClock,1000);}
-          updateClock();
+          requestAnimationFrame(updateClock);
+        }
+        requestAnimationFrame(updateClock);
+      })();
       // ==================== 卡片入场动画 ====================
       (function() {
         const grid = document.querySelector('.apd-grid[data-apd-animate]');
@@ -1796,30 +1800,7 @@
           }
         ];
         var STORAGE_KEY = 'edt_panels_v2';
-        var SECRET_KEY = "edtunnel-key";
         var currentFilter = '';
-        function encryptPwd(pwd){
-        return CryptoJS.AES.encrypt(
-        pwd,
-        SECRET_KEY
-        ).toString();
-        }
-        function decryptPwd(cipher){
-        try{
-        var bytes =
-        CryptoJS.AES.decrypt(
-        cipher,
-        SECRET_KEY
-        );
-
-        return bytes.toString(
-        CryptoJS.enc.Utf8
-        );
-
-        }catch(e){
-        return '';
-        }
-        }
         // ===== 数据操作 =====
         function getPanels() {
           try {
@@ -1828,36 +1809,15 @@
               localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PANELS));
               return JSON.parse(JSON.stringify(DEFAULT_PANELS));
             }
-            var data = JSON.parse(raw);
-
-        return data.map(function(p){
-         return {
-          url:p.url || '',
-          password:p.password
-           ? decryptPwd(p.password)
-           : ''
-       };
-     });
+            return JSON.parse(raw);
           } catch (e) {
             return JSON.parse(JSON.stringify(DEFAULT_PANELS));
           }
         }
-     // ===== 数据保存 =====
-     function savePanels(panels) {
-      var saveData = panels.map(function(p){
-       return {
-        url:p.url,
 
-        password:p.password
-         ? encryptPwd(p.password)
-        : ''
-     };
-   });
-localStorage.setItem(
- STORAGE_KEY,
- JSON.stringify(saveData)
-);
-}
+        function savePanels(panels) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(panels));
+        }
         // ===== 工具 =====
         function extractSuffix(url) {
           if (!url) return '';
@@ -2069,12 +2029,9 @@ localStorage.setItem(
             return;
           }
           var url = p.url.trim();
-          if(!/^([a-z0-9-]+\.)+[a-z]{2,}$/i.test(url)){
-          alert("地址格式错误");
-          return;
-          }
+          if (url.indexOf('http') !== 0) url = 'https://' + url;
           if (url.indexOf('/admin') === -1) url = url.replace(/\/$/, '') + '/admin';
-          window.open(url,'_blank','noopener,noreferrer');
+          window.open(url, '_blank');
         }
 
         function copyPwd(idx) {
