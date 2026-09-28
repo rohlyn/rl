@@ -1830,37 +1830,34 @@
             }
             var data = JSON.parse(raw);
 
-return data.map(function(p){
-
- return {
-   url:p.url || '',
-   password:p.password
-      ? decryptPwd(p.password)
-      : ''
- };
-
-});
+        return data.map(function(p){
+         return {
+          url:p.url || '',
+          password:p.password
+           ? decryptPwd(p.password)
+           : ''
+       };
+     });
           } catch (e) {
             return JSON.parse(JSON.stringify(DEFAULT_PANELS));
           }
         }
+     // ===== 数据保存 =====
+     function savePanels(panels) {
+      var saveData = panels.map(function(p){
+       return {
+        url:p.url,
 
-            var saveData = panels.map(function(p){
-
- return {
-   url:p.url,
-
-   password:p.password
-     ? encryptPwd(p.password)
-     : ''
- };
-
-});
-
+        password:p.password
+         ? encryptPwd(p.password)
+        : ''
+     };
+   });
 localStorage.setItem(
  STORAGE_KEY,
  JSON.stringify(saveData)
 );
+}
         // ===== 工具 =====
         function extractSuffix(url) {
           if (!url) return '';
