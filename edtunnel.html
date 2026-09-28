@@ -1,3 +1,132 @@
+// ==================== EDTunnel Panel Route ====================
+const PANEL_HTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorraine's</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 24'><path fill='%23000000' d='M16.67 12.68c-.07-1.77 1.45-2.63 1.52-2.66-.83-1.2-2.1-1.37-2.56-1.39-1.08-.11-2.12.64-2.67.64-.55 0-1.4-.62-2.3-.6-1.18.01-2.27.68-2.88 1.74-1.23 2.12-.32 5.26.88 6.98.58.84 1.28 1.78 2.2 1.75.88-.04 1.21-.57 2.28-.57 1.06 0 1.36.57 2.28.55.94-.02 1.54-.86 2.12-1.7.66-.97.94-1.91.96-1.96-.02-.01-1.84-.72-1.86-2.85l.03-.13ZM14.3 5.04c.48-.6.82-1.41.73-2.23-.7.03-1.55.47-2.06 1.06-.45.52-.84 1.34-.74 2.14.78.06 1.58-.4 2.07-.97Z'/></svg>" />
+<style>
+:root{--bg:#f5f5f7;--card-bg:#fff;--text:#1d1d1f;--text-secondary:#86868b;--accent:#0071e3;--accent-hover:#0077ed;--border:#d2d2d7;--shadow:0 2px 12px rgba(0,0,0,.08);--radius:12px;--nav-height:52px}*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;padding-top:var(--nav-height)}.global-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.1);z-index:1000;display:flex;align-items:center;justify-content:center}.nav-content{width:100%;max-width:980px;padding:0 20px;display:flex;align-items:center;justify-content:space-between}.nav-logo{font-size:17px;font-weight:600;color:var(--text);text-decoration:none;letter-spacing:-.02em}.nav-links{display:flex;gap:24px;list-style:none}.nav-links a{font-size:12px;color:var(--text-secondary);text-decoration:none;transition:color .2s}.nav-links a:hover{color:var(--text)}.nav-clock{font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums;min-width:60px;text-align:right}.mobile-toggle{display:none;background:none;border:none;font-size:20px;cursor:pointer;padding:4px 8px;color:var(--text)}.mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998;opacity:0;transition:opacity .3s}.mobile-overlay.active{display:block;opacity:1}.mobile-menu{position:fixed;top:var(--nav-height);right:0;bottom:0;width:260px;background:#fff;z-index:999;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:20px 0;overflow-y:auto}.mobile-menu.active{transform:translateX(0)}.mobile-menu a{display:block;padding:14px 24px;font-size:15px;color:var(--text);text-decoration:none;border-bottom:1px solid #f0f0f0}.mobile-menu a:hover{background:#f5f5f7}.hero-section{text-align:center;padding:60px 20px 40px;max-width:680px;margin:0 auto}.hero-section h1{font-size:clamp(28px,5vw,40px);font-weight:700;letter-spacing:-.03em;margin-bottom:12px}.hero-section p{font-size:17px;color:var(--text-secondary);line-height:1.6}.content-section{max-width:980px;margin:0 auto;padding:0 20px 60px}.section-title{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:20px;padding-left:4px}.apd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}.apd-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;border:1px solid transparent}.apd-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.12);border-color:var(--border)}.apd-card h3{font-size:15px;font-weight:600;margin-bottom:6px}.apd-card .desc{font-size:13px;color:var(--text-secondary);margin-bottom:12px;line-height:1.5}.card-pass-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-pass-row input{flex:1;height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;outline:none;transition:border-color .2s;background:#fafafa}.card-pass-row input:focus{border-color:var(--accent);background:#fff}.copy-btn{height:34px;padding:0 14px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .2s}.copy-btn:hover{background:var(--accent-hover)}.copy-btn.copied{background:#34c759}.go-btn{width:100%;height:38px;border:none;border-radius:8px;background:var(--text);color:#fff;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s}.go-btn:hover{opacity:.85}#edt-panel-container{max-width:980px;margin:0 auto;padding:0 20px 40px}.edt-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}.edt-toolbar input{flex:1;min-width:180px;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:14px;outline:none;background:#fff}.edt-toolbar input:focus{border-color:var(--accent)}.edt-toolbar button{height:38px;padding:0 18px;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}.btn-add{background:var(--accent);color:#fff}.btn-add:hover{background:var(--accent-hover)}.btn-batch{background:#e8e8ed;color:var(--text)}.btn-batch:hover{background:#d8d8dd}.quick-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.quick-tag{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:12px;cursor:pointer;transition:all .2s;color:var(--text-secondary)}.quick-tag:hover,.quick-tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}.footer{text-align:center;padding:30px 20px;font-size:12px;color:var(--text-secondary);border-top:1px solid #e8e8ed;margin-top:40px}@media(max-width:768px){.nav-links{display:none}.mobile-toggle{display:block}.hero-section{padding:40px 20px 30px}.hero-section h1{font-size:26px}.apd-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="global-nav"><div class="nav-content"><a href="/" class="nav-logo">Lorraine's</a><ul class="nav-links"><li><a href="/">首页</a></li><li><a href="/panel">EDTunnel</a></li><li><a href="https://github.com/rohlyn" target="_blank" rel="noopener">GitHub</a></li></ul><span class="nav-clock" id="navClock"></span><button class="mobile-toggle" id="mobileToggle" aria-label="菜单">☰</button></div></nav>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-menu" id="mobileMenu"><a href="/">首页</a><a href="/panel">EDTunnel</a><a href="https://github.com/rohlyn" target="_blank" rel="noopener">GitHub</a></div>
+<main>
+<section class="hero-section"><h1>EDTunnel 管理面板</h1><p>集中管理你的所有 EDTunnel 面板地址与密码，支持搜索、分组、一键进入。</p></section>
+<div id="edt-panel-container"></div>
+</main>
+<footer class="footer">© ${new Date().getFullYear()} Lorraine's · Powered by EDTunnel</footer>
+<script>
+/* ===== Nav Clock & Mobile Menu ===== */
+(function(){var c=document.getElementById('navClock');function u(){var d=new Date();c.textContent=d.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}u();setInterval(u,1000);var t=document.getElementById('mobileToggle'),o=document.getElementById('mobileOverlay'),m=document.getElementById('mobileMenu');function toggle(){var a=m.classList.contains('active');m.classList.toggle('active');o.classList.toggle('active');t.textContent=a?'☰':'✕'}t.addEventListener('click',toggle);o.addEventListener('click',toggle)})();
+
+/* ===== EDTunnel Panel Manager (with same-origin auto-login) ===== */
+(function(){
+'use strict';
+var STORAGE_KEY='edt_panels_v2';
+var DEFAULT_PANELS=[{name:'',url:'',password:''}];
+
+function getPanels(){try{var s=localStorage.getItem(STORAGE_KEY);if(s){var p=JSON.parse(s);if(Array.isArray(p)&&p.length)return p}}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_PANELS))}
+function savePanels(p){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}catch(e){}}
+
+function copyPwd(idx){
+  var panels=getPanels();var pwd=panels[idx]&&panels[idx].password||'';
+  if(!pwd){alert('密码为空');return}
+  navigator.clipboard.writeText(pwd).then(function(){
+    var btn=document.querySelector('[data-copy-idx="'+idx+'"]');
+    if(btn){var orig=btn.textContent;btn.textContent='已复制';btn.classList.add('copied');setTimeout(function(){btn.textContent=orig;btn.classList.remove('copied')},1500)}
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=pwd;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('已复制')
+  })
+}
+
+/* ★ 核心修改：goPanel 加入同域自动登录 ★ */
+function goPanel(idx){
+  var panels=getPanels();var p=panels[idx];
+  if(!p||!p.url.trim()){alert('请先输入面板地址');return}
+  var url=p.url.trim();
+  if(url.indexOf('http')!==0)url='https://'+url;
+  var adminUrl=url.indexOf('/admin')===-1?url.replace(/\\/$/,'')+'/admin':url;
+
+  /* 同域时先 POST 密码实现自动登录 */
+  var pwd=p.password||'';
+  try{
+    var targetOrigin=new URL(adminUrl).origin;
+    if(pwd&&targetOrigin===location.origin){
+      fetch(adminUrl,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'password='+encodeURIComponent(pwd),credentials:'include'}).catch(function(){})
+    }
+  }catch(e){}
+
+  window.open(adminUrl,'_blank')
+}
+
+function renderPanels(filter){
+  var container=document.getElementById('edt-panel-container');
+  var panels=getPanels();var f=(filter||'').toLowerCase();
+  var html='<div class="edt-toolbar"><input type="text" id="edtSearch" placeholder="搜索面板名称或地址..." value="'+(f||'')+'"><button class="btn-add" onclick="window.__edtAdd()">+ 添加</button><button class="btn-batch" onclick="window.__edtBatch()">批量添加</button></div>';
+  html+='<div class="quick-tags"><span class="quick-tag" data-q="">全部</span><span class="quick-tag" data-q="cf">Cloudflare</span><span class="quick-tag" data-q="vps">VPS</span><span class="quick-tag" data-q="hk">香港</span><span class="quick-tag" data-q="us">美国</span><span class="quick-tag" data-q="jp">日本</span></div>';
+  html+='<div class="apd-grid">';
+  var count=0;
+  for(var i=0;i<panels.length;i++){
+    var p=panels[i];
+    if(f&&(p.name+p.url).toLowerCase().indexOf(f)===-1)continue;
+    count++;
+    html+='<div class="apd-card">';
+    html+='<h3><input style="border:none;background:transparent;font:inherit;width:100%;outline:none" value="'+escH(p.name)+'" placeholder="面板名称" data-field="name" data-idx="'+i+'" /></h3>';
+    html+='<div class="desc"><input style="border:none;background:transparent;font:inherit;width:100%;outline:none;color:var(--text-secondary)" value="'+escH(p.url)+'" placeholder="面板地址 (如 xxx.workers.dev)" data-field="url" data-idx="'+i+'" /></div>';
+    html+='<div class="card-pass-row"><input type="password" value="'+escH(p.password)+'" placeholder="密码" data-field="password" data-idx="'+i+'" /><button class="copy-btn" data-copy-idx="'+i+'" onclick="window.__edtCopy('+i+')">复制密码</button></div>';
+    html+='<button class="go-btn" onclick="window.__edtGo('+i+')">进入面板</button>';
+    html+='</div>'
+  }
+  if(count===0)html+='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">没有匹配的面板</div>';
+  html+='</div>';
+  container.innerHTML=html;
+
+  /* bind search */
+  document.getElementById('edtSearch').addEventListener('input',function(e){renderPanels(e.target.value)});
+  /* bind quick tags */
+  var tags=container.querySelectorAll('.quick-tag');
+  tags.forEach(function(t){t.addEventListener('click',function(){tags.forEach(function(x){x.classList.remove('active')});t.classList.add('active');renderPanels(t.getAttribute('data-q'))})});
+  /* bind inline edit */
+  container.querySelectorAll('[data-field]').forEach(function(el){
+    el.addEventListener('change',function(){
+      var idx=parseInt(this.getAttribute('data-idx'));var field=this.getAttribute('data-field');
+      var panels=getPanels();if(panels[idx])panels[idx][field]=this.value;savePanels(panels)
+    })
+  })
+}
+
+function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+window.__edtGo=goPanel;
+window.__edtCopy=copyPwd;
+window.__edtAdd=function(){var p=getPanels();p.push({name:'',url:'',password:''});savePanels(p);renderPanels(document.getElementById('edtSearch')?document.getElementById('edtSearch').value:'')};
+window.__edtBatch=function(){var txt=prompt('批量添加（每行格式: 名称|地址|密码）:');if(!txt)return;var lines=txt.split('\\n');var p=getPanels();for(var i=0;i<lines.length;i++){var l=lines[i].trim();if(!l)continue;var parts=l.split('|');p.push({name:(parts[0]||'').trim(),url:(parts[1]||'').trim(),password:(parts[2]||'').trim()})}savePanels(p);renderPanels('')};
+
+renderPanels()
+})();
+<\/script>
+</body>
+</html>`;
+
+// ==================== Worker Fetch Handler ====================
+addEventListener('fetch', event => {
+    event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+    const url = new URL(request.url);
+
+    // ★ EDTunnel 管理面板路由
+    if (url.pathname === '/panel') {
+        return new Response(PANEL_HTML, {
+            status: 200,
+            headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' }
+        });
+    }
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
