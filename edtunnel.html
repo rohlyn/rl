@@ -858,8 +858,8 @@
       /* Apple Dark Grid - 与 .apd-card 配套使用 */
       .apd-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px,320px));
-        justify-content:center;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 320px));
+        justify-content: center;
         gap: 20px;
         width: 100%;
         max-width: 1200px;
@@ -1682,9 +1682,9 @@
           timeSpan.textContent = parts.filter(p => ['hour', 'minute', 'second'].includes(p.type)).map(p => p.value).join(':');
           msSpan.textContent = '.' + String(now.getMilliseconds()).padStart(3, '0');
           requestAnimationFrame(updateClock);
-          }
-          requestAnimationFrame(updateClock);
-          })();
+        }
+        requestAnimationFrame(updateClock);
+      })();
       // ==================== 卡片入场动画 ====================
       (function() {
         const grid = document.querySelector('.apd-grid[data-apd-animate]');
@@ -1932,6 +1932,29 @@
             pwdInput.type = 'password';
             pwdInput.value = panel.password || '';
             pwdInput.placeholder = '密码（可选）';
+            // 备注输入框
+            var remarkInput = document.createElement('input');
+            remarkInput.type = 'text';
+            remarkInput.value = panel.remark || '';
+            remarkInput.placeholder = '备注';
+            remarkInput.style.cssText =
+              'width:100%;' +
+              'background:rgba(255,255,255,0.02);' +
+              'border:1px solid rgba(100,150,255,0.5);' +
+              'border-radius:6px;' +
+              'padding:6px 10px;' +
+              'color:#fff;' +
+              'font-size:13px;' +
+              'outline:none;' +
+              'box-sizing:border-box;' +
+              'margin-top:6px;';
+            remarkInput.addEventListener('blur', function() {
+              var panels = getPanels();
+              if (panels[idx]) {
+                panels[idx].remark = this.value.trim();
+                savePanels(panels);
+              }
+            });
             pwdInput.style.cssText = 'width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 10px;color:#fff;font-size:13px;outline:none;box-sizing:border-box;';
             pwdInput.addEventListener('focus', function() {
               this.style.borderColor = 'rgba(100,150,255,0.5)';
@@ -1942,6 +1965,7 @@
             });
             inputs.appendChild(urlInput);
             inputs.appendChild(pwdInput);
+            inputs.appendChild(remarkInput);
             // 删除按钮
             var delBtn = document.createElement('button');
             delBtn.textContent = '×';
@@ -2028,7 +2052,7 @@
           var url = p.url.trim();
           if (url.indexOf('http') !== 0) url = 'https://' + url;
           if (url.indexOf('/admin') === -1) url = url.replace(/\/$/, '') + '/admin';
-          window.open(url,'_blank','noopener,noreferrer');
+          window.open(url, '_blank', 'noopener,noreferrer');
         }
 
         function copyPwd(idx) {
