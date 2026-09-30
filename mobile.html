@@ -1,0 +1,73 @@
+<!-- 引入 CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- 导航图标组 -->
+<div class="nav-icons">
+  <!-- 主页 -->
+  <a href="#" class="nav-item">
+    <i class="fa-solid fa-house"></i>
+    <span>首页</span>
+  </a>
+  
+  <!-- 搜索 -->
+  <a href="#" class="nav-item">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>搜索</span>
+  </a>
+  
+  <!-- 收藏 -->
+  <a href="#" class="nav-item">
+    <i class="fa-solid fa-star"></i>
+    <span>收藏</span>
+  </a>
+  
+  <!-- 用户中心 -->
+  <a href="#" class="nav-item">
+    <i class="fa-solid fa-user"></i>
+    <span>我的</span>
+  </a>
+  
+  <!-- 设置 -->
+  <a href="#" class="nav-item">
+    <i class="fa-solid fa-gear"></i>
+    <span>设置</span>
+  </a>
+</div>
+
+<style>
+.nav-icons {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 12px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #666;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.nav-item i {
+  font-size: 24px;
+  transition: transform 0.2s;
+}
+
+.nav-item:hover {
+  color: #1890ff;
+}
+
+.nav-item:hover i {
+  transform: translateY(-3px);
+}
+
+.nav-item.active {
+  color: #1890ff;
+}
+</style>
