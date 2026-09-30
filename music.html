@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rholyn Lab</title><!-- ==================== Favicon ==================== -->
+    <!-- 经典 Apple Logo 作为 favicon（SVG 内联方式，最清晰） -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 24'>
+  <path fill='%23000000' d='M16.67 12.68c-.07-1.77 1.45-2.63 1.52-2.66-.83-1.2-2.1-1.37-2.56-1.39-1.08-.11-2.12.64-2.67.64-.55 0-1.4-.62-2.3-.6-1.18.01-2.27.68-2.88 1.74-1.23 2.12-.32 5.26.88 6.98.58.84 1.28 1.78 2.2 1.75.88-.04 1.21-.57 2.28-.57 1.06 0 1.36.57 2.28.55.94-.02 1.54-.86 2.12-1.7.66-.97.94-1.91.96-1.96-.02-.01-1.84-.72-1.86-2.85l.03-.13ZM14.3 5.04c.48-.6.82-1.41.73-2.23-.7.03-1.55.47-2.06 1.06-.45.52-.84 1.34-.74 2.14.78.06 1.58-.4 2.07-.97Z'/>
+</svg>" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    <!-- 备用：.ico 格式（兼容老浏览器） -->
+    <link rel="alternate icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+    <style>
+      :root {
+        --nav-height: 44px;
+        --nav-bg: rgba(22, 22, 23, 0.8);
+        --nav-text: #f5f5f7;
+        --nav-text-dim: #a1a1a6;
+        --nav-hover: #ffffff;
+        --dropdown-bg: rgba(22, 22, 23, 0.95);
+        --accent: #0071e3;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+          "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #000;
+        color: #f5f5f7;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 200vh;
+        /* 让页面可滚动，演示粘性导航效果 */
+        ;
+      }
+
+      /* ==================== 全局导航栏 ==================== */
+      .global-nav {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        width: 100%;
+        height: var(--nav-height);
+        background: var(--nav-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        transition: background 0.3s ease;
+      }
+
+      .global-nav.scrolled {
+        background: rgba(22, 22, 23, 0.92);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-container {
+        max-width: 1024px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      @media(max-width:833px) {
+        .global-nav {
+          backdrop-filter: blur(10px);
+        }
+      }
+
+      /* ==================== Logo ==================== */
+      .nav-logo {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 100%;
+        color: var(--nav-text);
+        transition: color 0.2s ease;
+        text-decoration: none;
+      }
+
+      .nav-logo:hover {
+        color: var(--nav-hover);
+      }
+
+      .nav-logo svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* ==================== 主导航菜单 ==================== */
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        list-style: none;
+        gap: 0;
+      }
+
+      .nav-item {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 18px;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        color: var(--nav-text-dim);
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        background: none;
+        border: none;
+        font-family: inherit;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        color: var(--nav-hover);
+        outline: none;
+      }
+
+      /* ==================== 下拉菜单 ==================== */
+      .dropdown {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(8px);
+        background: var(--dropdown-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-radius: 18px;
+        padding: 20px 24px;
+        min-width: 280px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease,
+          transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 20px 60px rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+      }
+
+      /* 下拉箭头指向 */
+      .dropdown::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 12px;
+        height: 12px;
+        background: var(--dropdown-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-radius: 2px;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-item:hover .dropdown,
+      .nav-item:focus-within .dropdown {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(4px);
+      }
+
+      .dropdown-title {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #86868b;
+        margin-bottom: 10px;
+      }
+
+      .dropdown-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .dropdown-list li {
+        margin: 0;
+      }
+
+      .dropdown-list a {
+        display: block;
+        padding: 6px 0;
+        font-size: 14px;
+        font-weight: 500;
+        color: #f5f5f7;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .dropdown-list a:hover {
+        color: #fff;
+      }
+
+      .dropdown-list .sub-text {
+        font-size: 12px;
+        font-weight: 400;
+        color: #86868b;
+        margin-top: 1px;
+      }
+
+      .dropdown-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 10px 0;
+      }
+
+      .dropdown-featured {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .dropdown-featured a {
+        font-size: 13px;
+        font-weight: 400;
+        color: #a1a1a6;
+        padding: 4px 0;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .dropdown-featured a:hover {
+        color: #fff;
+      }
+
+      /* ==================== 右侧图标 ==================== */
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      .nav-icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 100%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--nav-text-dim);
+        transition: color 0.2s ease;
+        padding: 0;
+      }
+
+      .nav-icon-btn:hover {
+        color: var(--nav-hover);
+      }
+
+      .nav-icon-btn svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        pointer-events: none;
+      }
+
+      /* ==================== 移动端汉堡按钮 ==================== */
+      .hamburger {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 100%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: var(--nav-text-dim);
+        transition: color 0.2s ease;
+      }
+
+      .hamburger:hover {
+        color: var(--nav-hover);
+      }
+
+      .hamburger-line {
+        position: relative;
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger-line::before,
+      .hamburger-line::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger-line::before {
+        top: -6px;
+      }
+
+      .hamburger-line::after {
+        top: 6px;
+      }
+
+      /* 激活状态 */
+      .hamburger.active .hamburger-line {
+        background: transparent;
+      }
+
+      .hamburger.active .hamburger-line::before {
+        top: 0;
+        transform: rotate(45deg);
+      }
+
+      .hamburger.active .hamburger-line::after {
+        top: 0;
+        transform: rotate(-45deg);
+      }
+
+      /* ==================== 移动端侧滑菜单 ==================== */
+      .mobile-menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: var(--nav-height);
+        right: 0;
+        width: 320px;
+        max-width: 85vw;
+        height: calc(100vh - var(--nav-height));
+        background: rgba(22, 22, 23, 0.98);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        z-index: 9999;
+        overflow-y: auto;
+        padding: 24px 28px;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-section {
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 20px;
+      }
+
+      .mobile-menu-section:last-child {
+        border-bottom: none;
+      }
+
+      .mobile-menu-category {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #86868b;
+        margin-bottom: 8px;
+      }
+
+      .mobile-menu a {
+        display: block;
+        padding: 8px 0;
+        font-size: 17px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: #f5f5f7;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .mobile-menu a:hover {
+        color: #fff;
+      }
+
+      .mobile-menu a.sub-link {
+        font-size: 14px;
+        color: #a1a1a6;
+        padding: 5px 0;
+      }
+
+      /* ==================== 搜索栏（隐藏的） ==================== */
+      .search-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        transform: translateY(8px);
+        background: var(--dropdown-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-radius: 18px;
+        padding: 12px 16px;
+        min-width: 260px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease,
+          transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 20px 60px rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+      }
+
+      .search-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(4px);
+      }
+
+      .search-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+
+      .search-input-wrap svg {
+        width: 14px;
+        height: 14px;
+        fill: #86868b;
+        flex-shrink: 0;
+      }
+
+      .search-input-wrap input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .search-input-wrap input::placeholder {
+        color: #86868b;
+      }
+
+      .search-quick-links {
+        margin-top: 10px;
+      }
+
+      .search-quick-links span {
+        font-size: 11px;
+        color: #86868b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .search-quick-links a {
+        display: block;
+        font-size: 13px;
+        color: #a1a1a6;
+        text-decoration: none;
+        padding: 4px 0;
+        transition: color 0.15s;
+      }
+
+      .search-quick-links a:hover {
+        color: #fff;
+      }
+
+      /* ==================== 演示内容区域 ==================== */
+      .hero-section {
+        padding: 120px 20px 80px;
+        text-align: center;
+        background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
+      }
+
+      .hero-section h1 {
+        font-size: clamp(40px, 8vw, 80px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        color: #f5f5f7;
+        margin-bottom: 16px;
+      }
+
+      .hero-section .subhead {
+        font-size: clamp(17px, 3vw, 24px);
+        font-weight: 400;
+        color: #86868b;
+        letter-spacing: -0.01em;
+      }
+
+      .content-section {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 0 24px;
+      }
+
+      .content-section h2 {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+        color: #f5f5f7;
+      }
+
+      .content-section p {
+        font-size: 17px;
+        line-height: 1.6;
+        color: #a1a1a6;
+        margin-bottom: 24px;
+      }
+
+      /* ==================== 响应式 ==================== */
+      @media (max-width: 833px) {
+        .nav-menu {
+          display: none;
+        }
+
+        .hamburger {
+          display: flex;
+        }
+
+        .nav-container {
+          padding: 0 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-icon-btn {
+          width: 30px;
+        }
+
+        .nav-icon-btn svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .nav-logo svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .mobile-menu {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+
+      /* ==================== Footer ==================== */
+      .global-footer {
+        background: #161617;
+        padding: 40px 0 30px;
+        color: #86868b;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .footer-container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 22px;
+      }
+
+      /* 顶部声明 */
+      .footer-disclaimer {
+        padding-bottom: 18px;
+      }
+
+      .footer-disclaimer p {
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: #6e6e73;
+        line-height: 1.5;
+      }
+
+      .footer-disclaimer p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* 分割线 */
+      .footer-divider {
+        height: 1px;
+        background: #2d2d2f;
+        margin: 12px 0;
+      }
+
+      /* 多列布局 */
+      .footer-columns {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+        padding: 20px 0 30px;
+      }
+
+      .footer-col-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #f5f5f7;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+
+      .footer-col ul {
+        list-style: none;
+      }
+
+      .footer-col ul li {
+        margin-bottom: 6px;
+      }
+
+      .footer-col ul li a {
+        color: #86868b;
+        text-decoration: none;
+        font-size: 12px;
+        transition: color 0.15s ease;
+      }
+
+      .footer-col ul li a:hover {
+        color: #f5f5f7;
+        text-decoration: underline;
+      }
+
+      /* 底部最下栏 */
+      .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding-top: 8px;
+      }
+
+      .footer-copyright {
+        margin-right: auto;
+        color: #6e6e73;
+      }
+
+      .footer-legal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer-legal a {
+        color: #6e6e73;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .footer-legal a:hover {
+        color: #f5f5f7;
+        text-decoration: underline;
+      }
+
+      .footer-sep {
+        color: #3a3a3c;
+      }
+
+      .footer-locale {
+        margin-left: 16px;
+      }
+
+      .footer-locale a {
+        color: #6e6e73;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .footer-locale a:hover {
+        color: #f5f5f7;
+        text-decoration: underline;
+      }
+
+      /* ==================== Footer 响应式 ==================== */
+      @media (max-width: 833px) {
+        .footer-columns {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer-columns {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 24px 12px;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .footer-copyright {
+          margin-right: 0;
+        }
+
+        .footer-locale {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ==================== 全局导航栏 ==================== -->
+    <nav class="global-nav" id="globalNav" role="navigation" aria-label="主导航">
+      <div class="nav-container">
+        <!-- Apple Logo -->
+        <a href="index.html" class="nav-logo" aria-label="Apple 首页">
+          <svg viewBox="0 0 20 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.67 12.68c-.07-1.77 1.45-2.63 1.52-2.66-.83-1.2-2.1-1.37-2.56-1.39-1.08-.11-2.12.64-2.67.64-.55 0-1.4-.62-2.3-.6-1.18.01-2.27.68-2.88 1.74-1.23 2.12-.32 5.26.88 6.98.58.84 1.28 1.78 2.2 1.75.88-.04 1.21-.57 2.28-.57 1.06 0 1.36.57 2.28.55.94-.02 1.54-.86 2.12-1.7.66-.97.94-1.91.96-1.96-.02-.01-1.84-.72-1.86-2.85l.03-.13ZM14.3 5.04c.48-.6.82-1.41.73-2.23-.7.03-1.55.47-2.06 1.06-.45.52-.84 1.34-.74 2.14.78.06 1.58-.4 2.07-.97Z" />
+          </svg>
+        </a>
+        <!-- 主导航菜单（桌面端） -->
+        <ul class="nav-menu" id="navMenu" role="menubar">
+          <!-- sgzhd -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Sgzhd
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore Sgzhd</div>
+              <ul class="dropdown-list">
+                <li><a href="https://wanyiwan.top/game/sgzhd">时光</a></li>
+                <li><a href="biaoge.html">历史最高</a></li>
+                <li><a href="rencai.html">人才</a></li>
+                <li><a href="#">艺人</a></li>
+                <li><a href="#">澡堂</a></li>
+                <li><a href="#">载具</a></li>
+                <li><a href="#">鱼摊</a></li>
+                <li><a href="#">录像厅</a></li>
+                <li><a href="#">歌舞厅</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- 常用网站 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Website
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore URL</div>
+              <ul class="dropdown-list">
+                <li><a href="oldindex.html"><i class="fas fa-home"></i> Home  <span class="sub-text">ex</span></a></li>
+                <li><a href="page2.html"><i class="fa-solid fa-file"></i> page2  <span class="sub-text">backup</span></a></li>
+                <!-- Github -->
+                <li><a href="https://www.github.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-github"></i> Github</a></li>
+                <li><a href="https://cloudflare.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-cloudflare"></i> CloudFlare  <span class="sub-text">互联网大善人</span></a></li>
+                <!-- Google -->
+                <li><a href="https://www.google.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-google"></i> GOOGLE</a></li>
+                <!-- YouTube -->
+                <li><a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-youtube"></i> YOUTUBE  <span class="sub-text">油管</span></a></li>
+                <!-- Telegram -->
+                <li><a href="https://WEB.TELEGRAM.ORG" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-telegram"></i> TELEGRAM  <span class="sub-text">电报</span></a></li>
+                <!-- Twitter/X -->
+                <li><a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-twitter"></i> Twitter/X  <span class="sub-text">推特</span></a></li>
+                <!-- Facebook -->
+                <li><a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-facebook"></i> Facebook</a></li>
+                <!-- Instagram -->
+                <li><a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                <li><a href="https://yudou.us" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-building"></i> 玉豆分享</a></li>
+                <li><a href="https://CHATGPT.COM" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-robot"></i> CHATGPT  <span class="sub-text">最佳<i class="fa-solid fa-robot"></i></span></a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="https://nnnnnn.ccwu.cc" target="_blank" rel="noopener noreferrer" class="link-btn"><i class="fas fa-home"></i> 备用主页</a>
+                <a href="fav.html"><i class="fa-solid fa-bookmark"></i> 收藏</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- proxy -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Proxy
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore Proxy</div>
+              <ul class="dropdown-list">
+                <li><a href="https://info.l02.ccwu.cc" target="_blank" rel="noopener noreferrer" class="link-btn" data-search="proxy 代理 节点 节点信息 node nodeinfo">
+                    <i class="fa-solid fa-server"></i> NodeInfo  <span class="sub-text">节点信息</span></a></li>
+                <li><a href="https://bestcf.pages.dev/" target="_blank" rel="noopener noreferrer" class="link-btn">CF EDT<span class="sub-text">  EDT导航</span></a></li>
+                <li><a href="cfyouxuan.html">CF优选</a></li>
+                <li><a href="whitecard.html" target="_blank" rel="noopener noreferrer" class="link-btn">待定</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="https://vps789.com" target="_blank" rel="noopener noreferrer" class="link-btn">VPS789<span class="sub-text" "font-size:10px">  很🐮</span></a>
+                <a href="edtunnel.html"><i class="fa-solid fa-list"></i>  EDT<span class="sub-text" "font-size:10px">  后台</span></a>
+              </div>
+            </div>
+          </li>
+
+          <!-- tvbox -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Tvbox
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore TVBOX</div>
+              <ul class="dropdown-list">
+                <li><a href="https://欧.我爱你" target="_blank" rel="noopener noreferrer" class="link-btn">欧歌</a></li>
+                <li><a href="https://jianpian25.com//#/home" target="_blank" rel="noopener noreferrer" class="link-btn">荐片</a></li>
+                <li><a href="#">放牛娃</a></li>
+                <li><a href="#">肥猫</a></li>
+                <li><a href="#">饭太硬</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="https://ceshi.327n.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fas fa-video"></i> 奇优影院</a>
+                <a href="#">6 →</a>
+                <a href="#">7 →</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- 个人域名 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Domain
+            </button>
+            <div class="dropdown">
+              <div class="dropdown-title">Explore Domain</div>
+              <ul class="dropdown-list">
+                <li><a href="https://rholyn.de5.net" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> rholyn.de5.net</a></li>
+                <li><a href="https://rholyn.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> rholyn.ccwu.cc</a></li>
+                <li><a href="https://22222222.de5.net" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> 22222222.de5.net</a></li>
+                <li><a href="https://oooooooo.de5.net" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> oooooooo.de5.net</a></li>
+                <li><a href="https://33333333.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> 33333333.ccwu.cc</a></li>
+                <li><a href="https://nnnnnn.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> nnnnnn.ccwu.cc</a></li>
+                <li><a href="https://rolin.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> rolin.ccwu.cc</a></li>
+                <li><a href="https://l02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> l02.ccwu.cc</a></li>
+                <li><a href="https://i0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> i0.ccwu.cc</a></li>
+                <li><a href="https://o02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> o02.ccwu.cc</a></li>
+                <li><a href="https://r02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> r02.ccwu.cc</a></li>
+                <li><a href="https://r0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> r0.ccwu.cc</a></li>
+                <li><a href="https://e0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> e0.ccwu.cc</a></li>
+                <li><a href="https://n0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> n0.ccwu.cc</a></li>
+                <li><a href="https://rll.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> rll.ccwu.cc</a></li>
+                <li><a href="https://0h.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> 0h.ccwu.cc</a></li>
+                <li><a href="https://0r.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> 0r.ccwu.cc</a></li>
+                <li><a href="https://0k.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> 0k.ccwu.cc</a></li>
+                <li><a href="https://lorraine.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> lorraine.ccwu.cc</a></li>
+                <li><a href="https://leehui.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> leehui.ccwu.cc</a></li>
+                <li><a href="https://lorrainel.cc.cd" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> lorrainel.cc.cd</a></li>
+                <li><a href="https://lorraine.de5.net" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> lorraine.de5.net</a></li>
+                <li><a href="https://lorraine.bbroot.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-globe"></i> lorraine.bbroot.com</a></li>
+              </ul>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-featured">
+                <a href="blog.html"><i class="fa-solid fa-feather-pointed"></i> blog →</a>
+                <a href="https://hhhhhh.de5.net" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-house"></i> 本站 →</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- CSS -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              CSS
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="maoboli.html">毛玻璃效果</a></li>
+                <li><a href="css-1.html" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-window-maximize"></i> CSS1</a></li>
+                <li><a href="css2.html" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-window-maximize"></i> CSS2</a></li>
+                <li><a href="whitecard.html" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-window-maximize"></i> 白card</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- 中医 -->
+          <li class="nav-item" role="none">
+            <a href="TCM.html" class="nav-link" role="menuitem">
+              TCM
+            </a>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="heart.html" data-search="心">心</a></li>
+                <li><a href="Liver.html" data-search="肝">肝</a></li>
+                <li><a href="Spleen.html" data-search="脾">脾</a></li>
+                <li><a href="Lungs.html" data-search="肺">肺</a></li>
+                <li><a href="Kidneys.html" data-search="肾">肾</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- 编程 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Program
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#">Python在线运行</a></li>
+                <li><a href="https://www.toolshu.com/html" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-solid fa-laptop-code"></i> html在线运行</a></li>
+                <li><a href="https://toolshu.com/html-runner" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-solid fa-laptop-code"></i> 在线html编辑器</a></li>
+                <li><a href="#"><i class="fa-solid fa-laptop-code"></i> Json格式化</a></li>
+                <li><a href="#"><i class="fa-solid fa-laptop-code"></i> XML格式化</a></li>
+                <li><a href="https://kangax.github.io/html-minifier/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-solid fa-laptop-code"></i> HTML Minifier</a></li>
+                <li><a href="https://cssminifier.com" target="_blank" rel="noopener noreferrer" class="link-btn">CSS Minifier</a></li>
+                <li><a href="https://javascript-minifier.com" target="_blank" rel="noopener noreferrer" class="link-btn">JS Minifier</a></li>
+                <li><a href="https://toptal.com/developers/html-minifier" target="_blank" rel="noopener noreferrer" class="link-btn">Toptal</a></li>
+                <li><a href="https://fontawesome.com/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-brands fa-font-awesome"></i> Font Awesome</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- 站点 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Station
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="https://dnshe.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-solid fa-pager"></i> DNSHE <span class="sub-text">域名</span></a></li>
+                <li><a href="https://itdog.cn" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-dog"></i> ITDOG</a></li>
+                <li><a href="https://ip111.cn" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> ip111</a></li>
+                <li><a href="https://www.myip.com/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> MyIP</a></li>
+                <li><a href="https://ipcheck.ing/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fa-solid fa-location-pin"></i> ipcheck</a></li>
+                <li><a href="https://www.whatismyip.com/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> whatismyip</a></li>
+                <li><a href="https://ip.sb/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> ip.sb</a></li>
+                <li><a href="https://ifconfig.me/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> ifconfig</a></li>
+                <li><a href="https://icanhazip.com/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> icanhazip</a></li>
+                <li><a href="https://www.ident.me/" target="_blank" rel="noopener noreferrer" class="link-btn">
+                    <i class="fas fa-map-marker-alt"></i> ident</a></li>
+                <li><a href="https://lookup.icann.org/zh" target="_blank" rel="noopener noreferrer" class="link-btn">域名whois查询</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- 昵称 -->
+          <li class="nav-item" role="none">
+            <button class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              Me
+            </button>
+            <div class="dropdown">
+              <ul class="dropdown-list">
+                <li><a href="#"><i class="fa-regular fa-lemon"></i> Rholyn</a></li>
+                <li><a href="#"><i class="fa-solid fa-lemon"></i> Rohlyn</a></li>
+                <li><a href="#"><i class="fa-solid fa-carrot"></i> Lorraine</a></li>
+                <li><a href="#"><i class="fa-solid fa-seedling"></i> Rolin</a></li>
+                <li><a href="#"><i class="fa-solid fa-leaf"></i> Rolyn</a></li>
+                <li><a href="#"><i class="fa-solid fa-pepper-hot"></i> Rholin</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+
+        <!-- 右侧操作按钮 -->
+        <div class="nav-actions">
+          <!-- 搜索 -->
+          <div style="position: relative;">
+            <button class="nav-icon-btn" id="searchBtn" aria-label="搜索">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.5 2a8.5 8.5 0 1 0 5.26 15.17l4.53 4.54a.75.75 0 0 0 1.06-1.06l-4.53-4.54A8.5 8.5 0 0 0 10.5 2Zm-7 8.5a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z" fill-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+              <div class="search-input-wrap">
+                <svg viewBox="0 0 24 24">
+                  <path d="M10.5 2a8.5 8.5 0 1 0 5.26 15.17l4.53 4.54a.75.75 0 0 0 1.06-1.06l-4.53-4.54A8.5 8.5 0 0 0 10.5 2Zm-7 8.5a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z" fill-rule="evenodd" />
+                </svg>
+                <input id="siteSearch" type="text" placeholder="Search...">
+              </div>
+              <div class="search-quick-links">
+                <span>Quick Links</span>
+                <a href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 购物袋 -->
+          <button class="nav-icon-btn" aria-label="购物袋">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.25 6.5A1.75 1.75 0 0 1 6 4.75h12a1.75 1.75 0 0 1 1.75 1.75v13A1.75 1.75 0 0 1 18 21.25H6a1.75 1.75 0 0 1-1.75-1.75v-13Zm1.75-.25a.25.25 0 0 0-.25.25v13c0 .14.11.25.25.25h12c.14 0 .25-.11.25-.25v-13a.25.25 0 0 0-.25-.25H6ZM9.5 9a.75.75 0 0 1-.75-.75 3.25 3.25 0 0 1 6.5 0 .75.75 0 0 1-1.5 0 1.75 1.75 0 1 0-3.5 0A.75.75 0 0 1 9.5 9Z" fill-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- 汉堡菜单（移动端） -->
+          <button class="hamburger" id="hamburgerBtn" aria-label="菜单" aria-expanded="false">
+            <span class="hamburger-line"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ==================== 移动端遮罩层 ==================== -->
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+
+    <!-- ==================== 移动端侧滑菜单 ==================== -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-section">
+        <div class="mobile-menu-category">Explore Sgzhd</div>
+        <a href="https://wanyiwan.top/game/sgzhd">时光</a>
+        <a href="biaoge.html">历史最高</a>
+        <a href="rencai.html">人才</a>
+        <a href="#">艺人</a>
+        <a href="#">澡堂</a>
+        <a href="#">载具</a>
+        <a href="#">鱼摊</a>
+        <a href="#">录像厅</a>
+        <a href="#">歌舞厅</a>
+      </div>
+      <div class="mobile-menu-section">
+        <div class="mobile-menu-category">Explore URL</div>
+        <a href="oldindex.html">Home</a>
+        <a href="page2.html">page2</a>
+        <a href="https://www.github.com" target="_blank" rel="noopener noreferrer" class="link-btn">Github</a>
+        <a href="https://cloudflare.com" target="_blank" rel="noopener noreferrer" class="link-btn">CloudFlare</a>
+        <a href="https://www.google.com" target="_blank" rel="noopener noreferrer" class="link-btn">GOOGLE</a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="link-btn">YOUTUBE</a>
+        <a href="https://WEB.TELEGRAM.ORG" target="_blank" rel="noopener noreferrer" class="link-btn">TELEGRAM</a>
+        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" class="link-btn">Twitter/X</a>
+        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="link-btn">Facebook</a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="link-btn">Instagram</a>
+        <a href="https://yudou.us" target="_blank" rel="noopener noreferrer" class="link-btn">玉豆分享</a>
+        <a href="https://CHATGPD.COM" target="_blank" rel="noopener noreferrer" class="link-btn">CHATGPT</a>
+        <a href="https://ceshi.327n.com" target="_blank" rel="noopener noreferrer" class="link-btn">奇优影院</a>
+      </div>
+      <div class="mobile-menu-section">
+        <div class="mobile-menu-category">Proxy</div>
+        <a href="https://info.l02.ccwu.cc" target="_blank" rel="noopener noreferrer" class="link-btn">NodeInfo</a>
+        <a href="https://www.myip.com/" target="_blank" rel="noopener noreferrer" class="link-btn">MyIP</a>
+        <a href="https://bestcf.pages.dev/" target="_blank" rel="noopener noreferrer" class="link-btn">CF EDT</a>
+        <a href="#">3</a>
+      </div>
+      <div class="mobile-menu-section">
+        <a href="#">TCM</a>
+        <a href="#">CSS</a>
+        <a href="edtunnel.html">EDT</a>
+      </div>
+    </div>
+    <!-- ==================== 页面内容演示 ==================== -->
+    <main>
+      <section class="hero-section">
+        <h1>Hi，我是Lorraine</h1>
+        <p class="subhead">旅行 · 音乐 · 游戏 · 综艺</p>
+      </section>
+      <section class="content-section">
+        <h2>设计特点</h2>
+        <p>
+          这个导航栏还原了 Apple 官网的核心体验：深色半透明背景配合
+          <strong>backdrop-filter 毛玻璃模糊</strong>效果，
+          滚动时导航栏始终固定在页面顶部。鼠标悬停时会显示下拉菜单，
+          移动端则自动切换为汉堡菜单 + 侧滑面板。
+        </p>
+        <h2>核心功能</h2>
+        <p>
+          ✓ 粘性定位（Sticky）—— 始终在屏幕顶部<br>
+          ✓ 毛玻璃模糊效果（backdrop-filter blur）<br>
+          ✓ 桌面端下拉菜单（hover 触发）<br>
+          ✓ 搜索栏弹出面板<br>
+          ✓ 移动端汉堡菜单 + 侧滑面板<br>
+          ✓ 完整的响应式适配<br>
+          ✓ 无依赖纯 HTML + CSS + 少量 JS
+        </p>
+        <div id="aplayer"></div>
+      </section>
+    </main>
+    <!-- ==================== Apple 风格 Footer ==================== -->
+    <footer class="global-footer">
+      <div class="footer-container">
+        <!-- 顶部免责声明 -->
+        <div class="footer-disclaimer">
+          <p>
+            * 以上展示内容仅为个人设计。Rholyn、Rohlyn、Rolin、Rholin、Rolyn、Lorraine、
+            Rl 均为 Rholyn Inc. 在全球的注册商标。
+          </p>
+          <p>
+            本页面设计内容为 Rholyn Inc. 所有，分享内容请于24小时内删除。
+          </p>
+        </div>
+        <div class="footer-divider"></div>
+        <!-- 主导航列 -->
+        <div class="footer-columns">
+          <!-- 第1列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Sgzhd</h4>
+            <ul>
+              <li><a href="https://wanyiwan.top/game/sgzhd">时光</a></li>
+              <li><a href="biaoge.html">历史最高</a></li>
+              <li><a href="rencai.html">人才</a></li>
+              <li><a href="#">艺人</a></li>
+              <li><a href="#">澡堂</a></li>
+              <li><a href="#">载具</a></li>
+              <li><a href="#">鱼摊</a></li>
+              <li><a href="#">录像厅</a></li>
+              <li><a href="#">歌舞厅</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">TIPS</h4>
+            <ul>
+              <li><a href="fav.html">收藏</a></li>
+              <li><a href="whitecard.html">1</a></li>
+            </ul>
+          </div>
+
+          <!-- 第2列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Website</h4>
+            <ul>
+              <li><a href="oldindex.html"><i class="fas fa-home"></i> Home</a></li>
+              <li><a href="page2.html"><i class="fa-solid fa-file"></i> page2</a></li>
+              <!-- Github -->
+              <li><a href="https://www.github.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-github"></i> Github</a></li>
+              <li><a href="https://cloudflare.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-cloudflare"></i> CloudFlare</a></li>
+              <!-- Google -->
+              <li><a href="https://www.google.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-google">
+                  </i> GOOGLE</a></li>
+              <!-- YouTube -->
+              <li><a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-youtube">
+                  </i> YOUTUBE</a></li>
+              <!-- Telegram -->
+              <li><a href="https://WEB.TELEGRAM.ORG" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-telegram">
+                  </i> TELEGRAM</a></li>
+              <!-- Twitter/X -->
+              <li><a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-twitter">
+                  </i> Twitter/X</a></li>
+              <!-- Facebook -->
+              <li><a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-facebook">
+                  </i> Facebook</a></li>
+              <!-- Instagram -->
+              <li><a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-brands fa-instagram">
+                  </i> Instagram</a></li>
+              <li><a href="https://yudou.us" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fas fa-building">
+                  </i> 玉豆分享</a></li>
+              <li><a href="https://CHATGPD.COM" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fas fa-robot">
+                  </i> CHATGPT</a></li>
+            </ul>
+          </div>
+
+          <!-- 第3列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Domains</h4>
+            <ul>
+              
+              <li><a href="https://l02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> l02.ccwu.cc</a></li>
+              <li><a href="https://i0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> i0.ccwu.cc</a></li>
+              <li><a href="https://o02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> o02.ccwu.cc</a></li>
+              <li><a href="https://r02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> r02.ccwu.cc</a></li>
+              <li><a href="https://r0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> r0.ccwu.cc</a></li>
+              <li><a href="https://e0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> e0.ccwu.cc</a></li>
+              <li><a href="https://n0.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> n0.ccwu.cc</a></li>
+              <li><a href="https://rll.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> rll.ccwu.cc</a></li>
+              <li><a href="https://0h.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> 0h.ccwu.cc</a></li>
+              <li><a href="https://0r.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> 0r.ccwu.cc</a></li>
+              <li><a href="https://0k.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> 0k.ccwu.cc</a></li>
+              <li><a href="https://lorrainel.cc.cd" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> lorrainel.cc.cd</a></li>
+              <li><a href="https://lorraine.bbroot.com" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> lorraine.bbroot.com</a></li>
+            </ul>
+          </div>
+
+          <!-- 第4列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Fav</h4>
+            <ul>
+              <li><a href="https://rholyn.de5.net" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> rholyn.de5.net</a></li>
+              <li><a href="https://rholyn.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> rholyn.ccwu.cc</a></li>
+              <li><a href="https://lorraine.de5.net" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> lorraine.de5.net</a></li>
+              <li><a href="https://lorraine.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> lorraine.ccwu.cc</a></li>
+              <li><a href="https://leehui.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> leehui.ccwu.cc</a></li>
+              <li><a href="https://rolin.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> rolin.ccwu.cc</a></li>
+              <li><a href="https://22222222.de5.net" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> 22222222.de5.net</a></li>
+              <li><a href="https://oooooooo.de5.net" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> oooooooo.de5.net</a></li>
+              <li><a href="https://33333333.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> 33333333.ccwu.cc</a></li>
+              <li><a href="https://nnnnnn.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-globe"></i> nnnnnn.ccwu.cc</a></li>
+            </ul>
+          </div>
+
+          <!-- 第5列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Proxy</h4>
+            <ul>
+              <li><a href="https://info.l02.ccwu.cc" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fa-solid fa-server"></i> NodeInfo</a></li>
+              <li><a href="https://bestcf.pages.dev/" target="_blank" rel="noopener noreferrer" class="link-btn">CF EDT</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">For Program</h4>
+            <ul>
+              <li><a href="css-1.html">CSS</a></li>
+              <li><a href="https://ceshi.327n.com" target="_blank" rel="noopener noreferrer" class="link-btn">
+                  <i class="fas fa-video"></i> 奇优影院</a></li>
+              <li><a href="#">HTML</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">For Admin</h4>
+            <ul>
+              <li><a href="edtunnel.html">EDT</a></li>
+              <li><a href="#">2</a></li>
+            </ul>
+          </div>
+
+          <!-- 第6列 -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">TCM</h4>
+            <ul>
+              <li><a href="heart.html">心</a></li>
+              <li><a href="Liver.html">肝</a></li>
+              <li><a href="Spleen.html">脾</a></li>
+              <li><a href="Lungs.html">肺</a></li>
+              <li><a href="Kidneys.html#">肾</a></li>
+            </ul>
+            <h4 class="footer-col-title" style="margin-top: 20px;">about me</h4>
+            <ul>
+              <li><a href="https://nnnnnn.ccwu.cc" target="_blank" rel="noopener noreferrer" class="link-btn">备用主页</a></li>
+              <li><a href="#"><i class="fa-regular fa-lemon"></i>Rholyn</a></li>
+              <li><a href="#"><i class="fa-solid fa-lemon"></i>Rohlyn</a></li>
+              <li><a href="#"><i class="fa-solid fa-carrot"></i>Lorraine</a></li>
+              <li><a href="#"><i class="fa-solid fa-seedling"></i>Rolin</a></li>
+              <li><a href="#"><i class="fa-solid fa-leaf"></i>Rolyn</a></li>
+              <li><a href="#"><i class="fa-solid fa-pepper-hot"></i>Rholin</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-divider"></div>
+
+        <!-- 底部最下栏 -->
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            Copyright &copy; 2026 Rolin Inc. All rights reserved.
+          </p>
+          <div class="footer-legal">
+            <a href="#">Privacy Policy</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Terms of Use</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Sales and Refunds</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Legal</a>
+            <span class="footer-sep">|</span>
+            <a href="#">Site Map</a>
+          </div>
+          <p class="footer-locale">
+            <a href="#">中国</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script>
+      // ==================== 滚动时导航栏样式变化 ====================
+      const nav = document.getElementById('globalNav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+      // ==================== 搜索面板切换 ====================
+      const searchBtn = document.getElementById('searchBtn');
+      const searchDropdown = document.getElementById('searchDropdown');
+      searchBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        searchDropdown.classList.toggle('active');
+      });
+      // 点击外部关闭搜索面板
+      document.addEventListener('click', (e) => {
+        if (!searchDropdown.contains(e.target) && e.target !== searchBtn) {
+          searchDropdown.classList.remove('active');
+        }
+      });
+      // ESC 关闭搜索面板
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          searchDropdown.classList.remove('active');
+        }
+      });
+      // ==================== 移动端菜单 ====================
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileOverlay = document.getElementById('mobileOverlay');
+
+      function openMobileMenu() {
+        hamburgerBtn.classList.add('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+        mobileMenu.classList.add('active');
+        mobileOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        hamburgerBtn.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('active');
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      hamburgerBtn.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      });
+      mobileOverlay.addEventListener('click', closeMobileMenu);
+      // ESC 关闭移动菜单
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        }
+      });
+      // ==================== 键盘可访问性：下拉菜单 ====================
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const btn = item.querySelector('.nav-link');
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            // Toggle logic if needed
+          }
+        });
+      });
+    </script>
+    <script>
+      const searchBox =
+        document.getElementById('siteSearch');
+      searchBox.addEventListener(
+        'keydown',
+        function(e) {
+          if (e.key !== 'Enter')
+            return;
+          let keyword =
+            this.value.toLowerCase().trim();
+          if (!keyword)
+            return;
+          let links =
+            document.querySelectorAll(
+              '[data-search]'
+            );
+          for (let link of links) {
+            let text =
+              link.dataset.search
+              .toLowerCase();
+            if (
+              text.includes(keyword)
+            ) {
+              location.href =
+                link.href;
+              return;
+            }
+          }
+          // 没找到，使用 Google 搜索
+          window.open(
+            'https://www.google.com/search?q=' +
+            encodeURIComponent(keyword),
+            '_blank'
+          );
+        });
+    </script>
+    <script>
+      const ap = new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,           // 吸底模式，不占用内容区域
+      autoplay: false,       // ⚠️ 务必关闭自动播放，遵守浏览器策略
+      theme: '#b7daff',      // 主题色，可自定义
+      listFolded: true,      // 默认折叠歌单
+      audio: [
+        {
+            name: 'Song Name',
+            artist: 'Artist Name',
+            url: '/music/song1.mp3',      // 你的音频文件路径
+            cover: '/images/cover1.jpg',  // 封面图
+            lrc: '/lrc/song1.lrc'         // 歌词文件（可选）
+        },
+        // 添加更多歌曲...
+      ]
+     });
+   </script>
+  </body>
+</html>
