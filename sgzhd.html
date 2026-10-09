@@ -374,70 +374,74 @@ pre.code{background:var(--bg2);border:1px solid var(--border);border-radius:8px;
           <div class="proto-row"><span>满月卡：</span><span>7.537亿</span></div>
           <div class="proto-row"><span>当前10% · MAX：</span><span>6.633亿</span></div>
           <div class="proto-row"><span>当前10% · MAX：</span><span>7.236亿</span></div>
-          <p class="hint">开月卡时注意不要超过历史最高</p>
+          <p class="hint">上轮未使用月卡</p>
         </div>
         <div class="card">
           <h3><span class="tick"></span>JoJo</h3>
-          <div class="proto-row"><label class="switch"><input type="checkbox" id="tls-only"><span class="sl"></span></label><span>222</span></div>
-          <div class="field" style="margin-top:12px"><label>333</label><input type="text" id="alpn" placeholder="留空自动，如 h2,http/1.1" autocomplete="off"></div>
-          <p class="hint">444</p>
+          <div class="proto-row"><span>上轮历史最高收入：</span><span>1亿</span></div>
+          <div class="proto-row"><span>本轮涨幅：</span><span>1万</span></div>
+          <div class="proto-row"><span>当前历史最高：</span><span>1亿</span></div>
+          <div class="proto-row"><span>满月卡：</span><span>1亿</span></div>
+          <div class="proto-row"><span>当前10% · MAX：</span><span>1亿</span></div>
+          <div class="proto-row"><span>当前10% · MAX：</span><span>1亿</span></div>
+          <p class="hint">111</p>
         </div>
       </div>
       <div class="grid2">
         <div class="card">
-          <h3><span class="tick"></span>节点测活</h3>
-          <div class="proto-row"><label class="switch"><input type="checkbox" id="q-probe-on"><span class="sl"></span></label><span>节点测活（TCP 探测）</span></div>
+          <h3><span class="tick"></span>待使用</h3>
+          <div class="proto-row"><label class="switch"><input type="checkbox" id="q-probe-on"><span class="sl"></span></label><span>待使用</span></div>
           <p class="hint" style="margin-top:12px">555</p>
         </div>
         <div class="card">
-          <h3><span class="tick"></span>负载均衡</h3>
-          <div class="proto-row"><label class="switch"><input type="checkbox" id="q-lb-on"><span class="sl"></span></label><span>负载均衡（打乱下发顺序）</span></div>
+          <h3><span class="tick"></span>待使用</h3>
+          <div class="proto-row"><label class="switch"><input type="checkbox" id="q-lb-on"><span class="sl"></span></label><span>待使用</span></div>
           <p class="hint" style="margin-top:12px">666<br>
-            <b>保底前置</b>：777</p>
+            <b>待使用</b>待使用</p>
         </div>
       </div>
       <div class="card">
-        <h3><span class="tick"></span>ECH 加密（可选）</h3>
-        <div class="proto-row"><label class="switch"><input type="checkbox" id="ech-on"><span class="sl"></span></label><span>启用 ECH 加密（需绑定自定义域名）</span></div>
+        <h3><span class="tick"></span>待使用</h3>
+        <div class="proto-row"><label class="switch"><input type="checkbox" id="ech-on"><span class="sl"></span></label><span>待使用</span></div>
         <div class="grid2" style="margin-top:12px">
-          <div class="field" style="margin-bottom:0"><label>ECH 域名（留空用默认 cloudflare-ech.com）</label><input type="text" id="ech-host" placeholder="cloudflare-ech.com" autocomplete="off"></div>
-          <div class="field" style="margin-bottom:0"><label>自定义 ECH DNS（DoH 地址，留空用客户端默认）</label><input type="text" id="ech-dns" placeholder="https://223.5.5.5/dns-query" autocomplete="off"></div>
+          <div class="field" style="margin-bottom:0"><label>待使用</label><input type="text" id="ech-host" placeholder="cloudflare-ech.com" autocomplete="off"></div>
+          <div class="field" style="margin-bottom:0"><label>待使用</label><input type="text" id="ech-dns" placeholder="https://223.5.5.5/dns-query" autocomplete="off"></div>
         </div>
-        <p class="hint">开启后订阅节点附带 ech 参数与 alpn 协商，客户端需支持 ECH 才生效。</p>
+        <p class="hint">待使用</p>
       </div>
       <div class="card">
-        <h3><span class="tick"></span>落地与出站</h3>
-        <div class="field"><label>反代 / 落地 IP（留空则直连失败后走内置地区反代）</label><input type="text" id="s-proxyIP" placeholder="留空则直连失败后走内置地区反代" autocomplete="off"></div>
-        <div class="field"><label>出站代理（可选）</label><input type="text" id="s-outbound" placeholder="socks5://user:pass@1.2.3.4:1080 或 ss://chacha20-ietf-poly1305:密码@1.2.3.4:8388" autocomplete="off"></div>
-        <p class="hint">支持 socks5://（可带 user:pass@）、http(s)://、ss:// 或 host:port（默认按 socks5，端口 1080）。SS 加密支持 aes-128-gcm / aes-256-gcm / chacha20-ietf-poly1305。</p>
+        <h3><span class="tick"></span>待使用</h3>
+        <div class="field"><label>待使用</label><input type="text" id="s-proxyIP" placeholder="留空则直连失败后走内置地区反代" autocomplete="off"></div>
+        <div class="field"><label>待使用</label><input type="text" id="s-outbound" placeholder="socks5://user:pass@1.2.3.4:1080 或 ss://chacha20-ietf-poly1305:密码@1.2.3.4:8388" autocomplete="off"></div>
+        <p class="hint">待使用</p>
         <div class="field" style="margin-bottom:0"><label>出站方式</label>
           <select id="s-outmode">
-            <option value="">默认（优先代理，失败直连）</option>
-            <option value="no">直连优先（no）</option>
-            <option value="only">仅走代理（only）</option>
+            <option value="">待使用</option>
+            <option value="no">待使用</option>
+            <option value="only">待使用</option>
           </select>
         </div>
       </div>
       <div class="card">
-        <h3><span class="tick"></span>保存与生效</h3>
-        <div class="note-box" style="margin:0">配置修改后点右下角「保存全部」写入 KV 并生效，订阅与节点构成立即更新；「重置」清空 KV 全部数据并还原初始部署状态。</div>
+        <h3><span class="tick"></span>待使用</h3>
+        <div class="note-box" style="margin:0">待使用</div>
       </div>
     </section>
 
     <!-- ===== 视图：优选配置 ===== -->
     <section class="view" data-view="optimizer">
-      <div class="view-head"><h2>收入</h2><p>拉取候选 IP → 本地测速 → 最优节点加入订阅</p></div>
+      <div class="view-head"><h2>收入</h2><p>待使用</p></div>
       <div class="card">
         <h3><span class="tick"></span>在线优选</h3>
         <div class="grid3">
-          <div class="field" style="grid-column:span 2;margin:0"><label>数据源</label>
+          <div class="field" style="grid-column:span 2;margin:0"><label>待使用</label>
             <select id="o-source">
-              <option value="wetest_v4">微测网 IPv4</option>
-              <option value="wetest_v6">微测网 IPv6</option>
-              <option value="bestcf">优选 IP 列表（bestcf）</option>
-              <option value="hostmonit">HostMonit 优选</option>
-              <option value="cidr">内置 Cloudflare 地址段</option>
-              <option value="custom">自定义 URL</option>
+              <option value="wetest_v4">待使用</option>
+              <option value="wetest_v6">待使用</option>
+              <option value="bestcf">待使用</option>
+              <option value="hostmonit">待使用</option>
+              <option value="cidr">待使用</option>
+              <option value="custom">待使用</option>
             </select>
           </div>
           <div class="field" style="margin:0"><label>默认端口 <span style="font-weight:400;color:var(--faint)">（源未带端口时用）</span></label>
