@@ -362,33 +362,32 @@ pre.code{background:var(--bg2);border:1px solid var(--border);border-radius:8px;
           <div class="proto-row"><span>本轮涨幅：</span><span>5290万</span></div>
           <div class="proto-row"><span>当前历史最高：</span><span>6.979亿</span></div>
           <div class="proto-row"><span>满月卡：</span><span>8.35亿</span></div>
-          <div class="field" style="margin-top:12px justify-content:space-between"><label>当前10%max：<span>7.677亿</span></label></div>
-          <div class="field" style="margin-top:12px justify-content:space-between"><label>当前20%max：<span>8.375亿</span></label></div>
+          <div class="field" style="margin-top:12px"><label style="justify-content:space-between"><span>当前10% · MAX：</span><span>7.677亿</span></label></div>
+          <div class="field" style="margin-top:12px"><label style="justify-content:space-between"><span>当前20% · MAX：</span><span>8.375亿</span></label></div>
         </div>
         <div class="card">
-          <h3><span class="tick"></span>家宽模式</h3>
+          <h3><span class="tick"></span>Ni9ht</h3>
           <div class="proto-row"><label class="switch"><input type="checkbox" id="hw-on"><span class="sl"></span></label><span>VPN Gate OpenVPN （仅Mihomo内核）</span></div>
-          <p class="hint">【VPN Gate OpenVPN】自动拉取 VPN Gate 当日列表（按吞吐取最快、上限 100 台），只保留 TCP 节点下发为「家宽XX」节点（XX 为地区，同地区自动加序号）——CF 隧道不具备 UDP 承载能力，UDP 家宽节点经隧道必然握手失败，故在入口剔除；缓存 30 分钟（列表每小时重建/每 5 分钟重排，不足 30 台自动强制刷新，失败回退旧缓存）。家宽节点自身不能直连（大陆直连住宅 IP + 随机高位端口必被拦截），一律经「隧道前置」节点拨号；隧道节点由 Worker 自动生成并下发，不占用面板协议开关、也不受地区/运营商筛选影响，隧道自动测活切换。订阅只含家宽节点 + 隧道前置节点（默认/内置 CF 节点不再下发，自定义订阅除外，家宽与自定义节点同步下发）。</p>
+          <p class="hint">111</p>
         </div>
         <div class="card">
-          <h3><span class="tick"></span>TLS 与传输</h3>
-          <div class="proto-row"><label class="switch"><input type="checkbox" id="tls-only"><span class="sl"></span></label><span>仅 TLS 端口（跳过 80/8080 等明文端口）</span></div>
-          <div class="field" style="margin-top:12px"><label>ALPN 协商（h2 / http/1.1，逗号分隔）</label><input type="text" id="alpn" placeholder="留空自动，如 h2,http/1.1" autocomplete="off"></div>
-          <p class="hint">明文端口节点（80/8080/8880/2052/2082/2086/2095）开启「仅 TLS」后从订阅剔除。</p>
+          <h3><span class="tick"></span>JoJo</h3>
+          <div class="proto-row"><label class="switch"><input type="checkbox" id="tls-only"><span class="sl"></span></label><span>222</span></div>
+          <div class="field" style="margin-top:12px"><label>333</label><input type="text" id="alpn" placeholder="留空自动，如 h2,http/1.1" autocomplete="off"></div>
+          <p class="hint">444</p>
         </div>
       </div>
       <div class="grid2">
         <div class="card">
           <h3><span class="tick"></span>节点测活</h3>
           <div class="proto-row"><label class="switch"><input type="checkbox" id="q-probe-on"><span class="sl"></span></label><span>节点测活（TCP 探测）</span></div>
-          <p class="hint" style="margin-top:12px">关闭：全量下发不测活，客户端自行择优。开启：对候选地址 TCP 探测并剔除判死项（CF 段 IP 禁止出站探测、直接视为可用，仅对非 CF 段反代/ProxyIP 真实测活）；自定义订阅 / 随机优选模式不测活。</p>
+          <p class="hint" style="margin-top:12px">555</p>
         </div>
         <div class="card">
           <h3><span class="tick"></span>负载均衡</h3>
           <div class="proto-row"><label class="switch"><input type="checkbox" id="q-lb-on"><span class="sl"></span></label><span>负载均衡（打乱下发顺序）</span></div>
-          <p class="hint" style="margin-top:12px">每次订阅对节点顺序随机轮换（Fisher-Yates），连接分散避免集中踩同一批头部 IP；关闭则固定顺序。<br>
-            <b>保底前置</b>：「优选IP-Sxx」（实测高存活 IP）/「内置·保底-XX」/「隧道前置-XX」始终保留在清单头部（组内仍随机轮换），
-            其余节点整体乱序——既保证客户端「取第一个」就是稳定节点，又不牺牲分散连接的收益；同时避免这批最稳的节点在节点数封顶时被尾部截断砍掉。</p>
+          <p class="hint" style="margin-top:12px">666<br>
+            <b>保底前置</b>：777</p>
         </div>
       </div>
       <div class="card">
